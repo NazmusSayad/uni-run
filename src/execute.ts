@@ -1,8 +1,9 @@
+import { spawn } from 'cross-spawn'
 import * as readline from 'readline'
 import { ChildProcess } from 'child_process'
-import { spawn } from 'cross-spawn'
-import colors from './utils/colors'
 import watcher from './watcher'
+import colors from './utils/colors'
+import { killChildProcess } from './utils/kill-process'
 
 export type ExecuteOptions = {
   cwd: string
@@ -54,8 +55,10 @@ export default function (
     }
 
     killProcess()
+
     child = spawn(command, args, {
       shell: false,
+      killSignal: 'SIGKILL',
       cwd: options.cwd,
       stdio: 'inherit',
       env: { ...options.env },
@@ -83,14 +86,13 @@ export default function (
   }
 
   function killProcess() {
-    if (child) {
-      child.removeAllListeners()
-      child.kill()
-    }
+    if (!child) return
+    killChildProcess(child)
+    child = null
   }
 
   runProcess()
   process.on('exit', killProcess)
   process.on('SIGINT', killProcess)
-  process.on('cleanup', killProcess)
+  process.on('SIGTERM', killProcess)
 }

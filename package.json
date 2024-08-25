@@ -1,7 +1,7 @@
 {
   "name": "uni-run",
   "description": "Universal Runner for many language",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "type": "commonjs",
   "scripts": {
     "ts": "w ./src/__lab__/index.ts",
@@ -22,6 +22,7 @@
   },
   "devDependencies": {
     "@types/cross-spawn": "^6.0.6",
+    "@types/node": "^22.5.0",
     "typescript": "^5.5.4"
   },
   "repository": {
