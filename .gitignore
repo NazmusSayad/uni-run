@@ -1,0 +1,4 @@
+# npmize
+dist
+.npmize
+node_modules
