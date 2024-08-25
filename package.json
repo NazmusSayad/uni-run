@@ -1,13 +1,13 @@
 {
   "name": "uni-run",
   "description": "Universal Runner for many language",
-  "version": "0.0.0",
+  "version": "0.0.2",
   "type": "commonjs",
   "scripts": {
     "ts": "w ./src/__lab__/index.ts",
     "js": "n ./dist/__lab__/index.js",
     "dev": "tsc --watch",
-    "build": "tsc"
+    "build": "node ./build.cjs"
   },
   "bin": {
     "ur": "./dist/bin.js",

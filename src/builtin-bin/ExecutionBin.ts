@@ -34,7 +34,8 @@ export default class ExecutionBin {
   isInstalled() {
     const result = spawnSync(
       this.command,
-      this.checkInstallationArgs ? this.checkInstallationArgs : []
+      this.checkInstallationArgs ? this.checkInstallationArgs : [],
+      { shell: false, stdio: 'ignore' }
     )
 
     if (result.status === 1) return false

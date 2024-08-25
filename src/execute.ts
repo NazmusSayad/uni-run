@@ -23,10 +23,11 @@ export default function (
     readline.emitKeypressEvents(process.stdin)
     process.stdin.setRawMode?.(true)
     process.stdin.on('keypress', (_, key) => {
-      if (key.name === 'f5') return exec()
-      if ((key.ctrl || key.meta) && key.name === 'r') return exec()
+      if (key.name === 'f5') return runProcess()
+      if ((key.ctrl || key.meta) && key.name === 'r') return runProcess()
 
       if (key.ctrl && key.name === 'c') {
+        killProcess()
         console.log('^C...')
         process.exit(0)
       }
@@ -41,24 +42,20 @@ export default function (
         debounceDelay: options.watchDelay,
         extensions: new Set(options.watchExtensions),
       },
-      () => exec()
+      () => runProcess()
     )
   }
 
   let child: ChildProcess | null = null
-  function exec() {
+  function runProcess() {
     if (options.clearOnReload) {
       process.stdout.write('\x1Bc')
       console.clear()
     }
 
-    if (child) {
-      child.removeAllListeners()
-      child.kill()
-    }
-
+    killProcess()
     child = spawn(command, args, {
-      argv0: command,
+      shell: false,
       cwd: options.cwd,
       stdio: 'inherit',
       env: { ...options.env },
@@ -85,5 +82,15 @@ export default function (
     })
   }
 
-  exec()
+  function killProcess() {
+    if (child) {
+      child.removeAllListeners()
+      child.kill()
+    }
+  }
+
+  runProcess()
+  process.on('exit', killProcess)
+  process.on('SIGINT', killProcess)
+  process.on('cleanup', killProcess)
 }
