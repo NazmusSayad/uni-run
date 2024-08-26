@@ -1,8 +1,8 @@
 import * as os from 'os'
 import { ChildProcess, execSync } from 'child_process'
 
-export function killChildProcess(child: ChildProcess) {
-  if (!child.pid) return
+export default function (child: ChildProcess) {
+  if (!child.pid) return true
   child.removeAllListeners()
   const isWindows = os.platform() === 'win32'
 
@@ -12,10 +12,12 @@ export function killChildProcess(child: ChildProcess) {
     } else {
       process.kill(-child.pid, 'SIGKILL')
     }
+  } catch {}
+
+  try {
+    process.kill(child.pid, 0)
+    return false
   } catch (error) {
-    console.error(
-      `Failed to kill child process${isWindows ? ' on Windows' : ''}:`,
-      error
-    )
+    return true
   }
 }

@@ -1,7 +1,7 @@
 {
   "name": "uni-run",
   "description": "Universal Runner for many language",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "type": "commonjs",
   "scripts": {
     "ts": "w ./src/__lab__/index.ts",

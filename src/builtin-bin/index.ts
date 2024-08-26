@@ -1,13 +1,10 @@
-import ExecutionBin from './ExecutionBin'
+import Executor from './Executor'
 
 export default [
-  new ExecutionBin({
-    name: 'Node.js',
+  new Executor('Node.js', {
     command: 'node',
     extensions: ['js', 'javascript', 'jsx', 'cjs', 'cjsx', 'mjs', 'mjsx'],
-    run(...args) {
-      return [this.command, ...args]
-    },
+    watchExtensions: ['html', 'css', 'json'],
 
     checkInstallationArgs: ['--version'],
     howToInstall: () => {
@@ -15,15 +12,24 @@ export default [
     },
   }),
 
-  new ExecutionBin({
-    name: 'TypeScript',
+  new Executor('TypeScript', {
     command: 'ts-node',
     extensions: ['ts', 'tsx', 'cts', 'ctsx', 'mts', 'mtsx'],
-    run(...args) {
-      return [this.command, ...args]
-    },
+    watchExtensions: [
+      'html',
+      'css',
+      'json',
+      'js',
+      'javascript',
+      'jsx',
+      'cjs',
+      'cjsx',
+      'mjs',
+      'mjsx',
+    ],
 
     checkInstallationArgs: ['--version'],
+    installCommands: [['npm', 'install', '-g', 'ts-node']],
     howToInstall: () => {
       console.log(
         'Please install ts-node from https://www.npmjs.com/package/ts-node'
@@ -31,31 +37,60 @@ export default [
     },
   }),
 
-  new ExecutionBin({
-    name: 'python',
+  new Executor('Python', {
     command: 'python',
     extensions: ['py'],
-    run(...args) {
-      return [this.command, ...args]
-    },
-
     checkInstallationArgs: ['--version'],
     howToInstall: () => {
       console.log('Please install Python from https://www.python.org/')
     },
   }),
 
-  new ExecutionBin({
-    name: 'java',
+  new Executor('Java - Oracle', {
     command: 'java',
     extensions: ['java'],
-    run(...args) {
-      return [this.command, ...args]
-    },
-
     checkInstallationArgs: ['--version'],
     howToInstall: () => {
       console.log('Please install Java from https://www.oracle.com/java/')
+    },
+  }),
+
+  new Executor('Powershell', {
+    command: 'powershell',
+    extensions: ['ps1'],
+    checkInstallationArgs: ['-command', '"Get-Host"'],
+    howToInstall: () => {
+      console.log(
+        'Please install Powershell from https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell'
+      )
+    },
+  }),
+
+  new Executor('Cmd - Command Prompt', {
+    command: 'cmd',
+    runArgs: ['/c'],
+    extensions: ['cmd', 'bat'],
+    checkInstallationArgs: ['/c', 'echo', 'ok'],
+    howToInstall: () => {
+      console.log('Please install Command Prompt from Windows')
+    },
+  }),
+
+  new Executor('Shell', {
+    command: 'bash',
+    extensions: ['sh'],
+    checkInstallationArgs: ['--version'],
+    howToInstall: () => {
+      console.log('Please install Bash from https://www.gnu.org/software/bash/')
+    },
+  }),
+
+  new Executor('Lua', {
+    command: 'lua',
+    extensions: ['lua'],
+    checkInstallationArgs: ['--version'],
+    howToInstall: () => {
+      console.log('Please install Lua from https://www.lua.org/')
     },
   }),
 ]
