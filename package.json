@@ -1,7 +1,7 @@
 {
   "name": "uni-run",
   "description": "Universal Runner for many language",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "type": "commonjs",
   "scripts": {
     "ts": "w ./src/__lab__/index.ts",
@@ -10,7 +10,8 @@
     "build": "node ./build.cjs"
   },
   "bin": {
-    "ur": "./dist/bin.js",
+    "r": "./dist/bin.js",
+    "run": "./dist/bin.js",
     "uni-run": "./dist/bin.js"
   },
   "dependencies": {

@@ -2,7 +2,7 @@ import { spawn } from 'cross-spawn'
 import * as readline from 'readline'
 import { ChildProcess } from 'child_process'
 import watcher from './watcher'
-import colors from '../utils/colors'
+import colors from '../lib/colors'
 import killProcess from './kill-process'
 
 export default class Execution {
