@@ -26,12 +26,13 @@ export default class Execution {
       readline.emitKeypressEvents(process.stdin)
       process.stdin.setRawMode?.(true)
       process.stdin.on('keypress', (_, key) => {
-        if (key.name === 'f5') return this.runProcess()
-        if ((key.ctrl || key.meta) && key.name === 'r') return this.runProcess()
+        if (key.name === 'f5' || (key.ctrl && key.name === 'r')) {
+          return this.runProcess()
+        }
 
         if (key.ctrl && key.name === 'c') {
           this.killProcess()
-          process.exit(0)
+          return process.exit(0)
         }
       })
     }

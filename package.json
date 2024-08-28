@@ -1,16 +1,15 @@
 {
   "name": "uni-run",
   "description": "Universal Runner for many language",
-  "version": "0.0.5",
+  "version": "1.0.0",
   "type": "commonjs",
   "scripts": {
-    "ts": "w ./src/__lab__/index.ts",
-    "js": "n ./dist/__lab__/index.js",
+    "ts": "run ./src/__lab__/index.ts",
+    "js": "run ./dist/__lab__/index.js",
     "dev": "tsc --watch",
     "build": "node ./build.cjs"
   },
   "bin": {
-    "r": "./dist/bin.js",
     "run": "./dist/bin.js",
     "uni-run": "./dist/bin.js"
   },
@@ -19,7 +18,7 @@
     "chokidar": "^3.6.0",
     "cross-spawn": "^7.0.3",
     "ignore": "^5.3.2",
-    "noarg": "^3.0.21"
+    "noarg": "^3.1.0"
   },
   "devDependencies": {
     "@types/cross-spawn": "^6.0.6",

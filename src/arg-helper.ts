@@ -13,20 +13,20 @@ export const executionConfig = NoArg.defineConfig({
       .description('Clear the console before running the script')
       .aliases('c'),
 
-    reload: NoArg.boolean()
+    reloadKey: NoArg.boolean()
       .default(true)
-      .description('Reload the page when pressing "Ctrl+R" or "Meta+R"')
-      .aliases('r'),
+      .description('Reload the page when pressing "Ctrl+R" or "F5"')
+      .aliases('rk'),
 
     watch: NoArg.boolean()
       .default(true)
       .description('Watch for changes')
       .aliases('w'),
 
-    watchDelay: NoArg.number()
+    delay: NoArg.number()
       .default(100)
       .description('The delay to wait for the watcher to trigger')
-      .aliases('wd'),
+      .aliases('d'),
 
     ext: NoArg.array(NoArg.string())
       .default([])
@@ -35,7 +35,8 @@ export const executionConfig = NoArg.defineConfig({
 
     ignore: NoArg.array(NoArg.string())
       .default([])
-      .description('Ignore the given targets'),
+      .description('Ignore the given targets')
+      .aliases('ig'),
 
     env: NoArg.array(NoArg.string())
       .default([])
@@ -43,12 +44,16 @@ export const executionConfig = NoArg.defineConfig({
   },
 
   listArgument: {
-    name: 'args',
+    name: 'args for script',
     description: 'The arguments to pass to the script',
     type: NoArg.string(),
   },
 
   trailingArguments: '--',
+
+  customRenderHelp: {
+    helpUsageTrailingArgsLabel: '--args/flags for script',
+  },
 })
 
 export function mapFlagsToOptions(
@@ -58,7 +63,7 @@ export function mapFlagsToOptions(
   return {
     cwd: flags.cwd,
     clearOnReload: flags.clear,
-    readlineReload: flags.reload,
+    readlineReload: flags.reloadKey,
     env: flags.env.reduce((acc: any, env) => {
       const [key, value] = env.split('=')
       acc[key] = value
@@ -66,7 +71,7 @@ export function mapFlagsToOptions(
     }, {}),
 
     watch: flags.watch,
-    watchDelay: flags.watchDelay,
+    watchDelay: flags.delay,
     watchExtensions: flags.ext.length ? flags.ext : watchExtensions ?? [],
     watchIgnore: flags.ignore,
   }

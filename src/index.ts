@@ -24,3 +24,16 @@ arg.app.on(([script, listArs, trailingArgs], flags) => {
 arg.exec.on(([listArs, trailingArgs], flags) => {
   Execution.start([...listArs, ...trailingArgs], mapFlagsToOptions(flags))
 })
+
+arg.support.on(() => {
+  console.log('Supported scripts:')
+  builtinBin
+    .sort((a, b) => {
+      if (a.name < b.name) return -1
+      if (a.name > b.name) return 1
+      return 0
+    })
+    .forEach((bin) => {
+      console.log(`- ${bin.name}`)
+    })
+})

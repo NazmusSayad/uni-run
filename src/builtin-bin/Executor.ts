@@ -9,7 +9,7 @@ type ExecutionBinConfig = {
   runArgs?: string[]
   checkInstallationArgs?: string[]
   howToInstall?: () => void
-  installCommands?: string[][]
+  installCommands?: { command: string; args: string[] }[]
 }
 
 export default class Executor {
@@ -47,7 +47,7 @@ export default class Executor {
     confirm({ message: 'Do you want to install it?' }).then((ans) => {
       if (!ans) return
 
-      this.config.installCommands?.forEach(([command, ...args]) => {
+      this.config.installCommands?.forEach(({ command, args }) => {
         if (!command) return
         spawnSync(command, args, { stdio: 'inherit' })
       })

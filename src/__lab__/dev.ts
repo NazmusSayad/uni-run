@@ -9,10 +9,11 @@ import { app } from '../arg'
 // ])
 
 app.start([
-  './scripts/main.ts',
-  '--env',
-  'NODE_ENV=development',
-  'OTHER_ENV=other',
+  '-h',
+  // './scripts/main.ts',
+  // '--env',
+  // 'NODE_ENV=development',
+  // 'OTHER_ENV=other',
 ])
 // app.start(['./scripts/index.js'])
 // app.start(['./scripts/main.py'])

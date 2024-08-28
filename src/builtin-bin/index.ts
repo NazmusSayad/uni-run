@@ -8,7 +8,7 @@ export default [
 
     checkInstallationArgs: ['--version'],
     howToInstall: () => {
-      console.log('Please install Node.js from https://nodejs.org/')
+      console.log('Please install Node.js from https://nodejs.org')
     },
   }),
 
@@ -29,7 +29,7 @@ export default [
     ],
 
     checkInstallationArgs: ['--version'],
-    installCommands: [['npm', 'install', '-g', 'ts-node']],
+    installCommands: [{ command: 'npm', args: ['install', '-g', 'ts-node'] }],
     howToInstall: () => {
       console.log(
         'Please install ts-node from https://www.npmjs.com/package/ts-node'
@@ -42,7 +42,7 @@ export default [
     extensions: ['py'],
     checkInstallationArgs: ['--version'],
     howToInstall: () => {
-      console.log('Please install Python from https://www.python.org/')
+      console.log('Please install Python from https://www.python.org')
     },
   }),
 
@@ -51,7 +51,7 @@ export default [
     extensions: ['java'],
     checkInstallationArgs: ['--version'],
     howToInstall: () => {
-      console.log('Please install Java from https://www.oracle.com/java/')
+      console.log('Please install Java from https://www.oracle.com/java')
     },
   }),
 
@@ -66,7 +66,7 @@ export default [
     },
   }),
 
-  new Executor('Cmd - Command Prompt', {
+  new Executor('Command Prompt', {
     command: 'cmd',
     runArgs: ['/c'],
     extensions: ['cmd', 'bat'],
@@ -81,7 +81,7 @@ export default [
     extensions: ['sh'],
     checkInstallationArgs: ['--version'],
     howToInstall: () => {
-      console.log('Please install Bash from https://www.gnu.org/software/bash/')
+      console.log('Please install Bash from https://www.gnu.org/software/bash')
     },
   }),
 
@@ -90,7 +90,32 @@ export default [
     extensions: ['lua'],
     checkInstallationArgs: ['--version'],
     howToInstall: () => {
-      console.log('Please install Lua from https://www.lua.org/')
+      console.log('Please install Lua from https://www.lua.org')
+    },
+  }),
+
+  new Executor('SASS (CSS)', {
+    command: 'sass',
+    extensions: ['sass', 'scss'],
+    checkInstallationArgs: ['--version'],
+    installCommands: [{ command: 'npm', args: ['install', '-g', 'sass'] }],
+    howToInstall: () => {
+      console.log('Please install SASS from https://sass-lang.com')
+    },
+  }),
+
+  new Executor('HTML Server', {
+    command: 'http-server',
+    extensions: ['html', 'htm'],
+    watchExtensions: ['css', 'js', 'json'],
+    checkInstallationArgs: ['--version'],
+    installCommands: [
+      { command: 'npm', args: ['install', '-g', 'http-server'] },
+    ],
+    howToInstall: () => {
+      console.log(
+        'Please install http-server from https://www.npmjs.com/package/http-server'
+      )
     },
   }),
 ]
