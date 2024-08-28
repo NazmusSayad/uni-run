@@ -1,6 +1,7 @@
 import NoArg from 'noarg'
 import type { app } from './arg'
 import { ExecuteOptions } from './execution'
+import Executor from './builtin-bin/Executor'
 
 export const executionConfig = NoArg.defineConfig({
   flags: {
@@ -11,6 +12,18 @@ export const executionConfig = NoArg.defineConfig({
     shell: NoArg.boolean()
       .default(false)
       .description('Run the script in a shell for more low-level control'),
+
+    info: NoArg.boolean()
+      .default(false)
+      .description('Show information about the script'),
+
+    time: NoArg.boolean()
+      .default(false)
+      .description('Show the execution time at the start'),
+
+    bench: NoArg.boolean()
+      .default(false)
+      .description('Show the execution time'),
 
     clear: NoArg.boolean()
       .default(true)
@@ -66,13 +79,26 @@ export const executionConfig = NoArg.defineConfig({
 
 export function mapFlagsToOptions(
   flags: NoArg.InferFlags<typeof app>,
-  watchExtensions?: string[]
+  bin?: Executor
 ): ExecuteOptions {
   return {
     cwd: flags.cwd,
     shell: flags.shell,
+    showInfo: flags.info,
+    showTime: flags.time,
+    benchmark: flags.bench,
+
     clearOnReload: flags.clear,
     readlineReload: flags.reloadKey,
+
+    watch: flags.watch,
+    watchDelay: flags.delay,
+    watchExtensions:
+      (flags.ext.length ? flags.ext : bin?.config.watchExtensions) ??
+      bin?.config.extensions ??
+      [],
+    watchIgnore: flags.ignore,
+
     env: {
       ...flags.env.reduce((acc: any, env) => {
         const [key, value] = env.split('=')
@@ -82,10 +108,5 @@ export function mapFlagsToOptions(
 
       ...(flags.nodeDev ? { NODE_ENV: 'development' } : {}),
     },
-
-    watch: flags.watch,
-    watchDelay: flags.delay,
-    watchExtensions: flags.ext.length ? flags.ext : watchExtensions ?? [],
-    watchIgnore: flags.ignore,
   }
 }

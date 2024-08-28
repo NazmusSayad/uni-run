@@ -54,6 +54,14 @@ export default class Execution {
     this.killProcess()
     this.clearBeforeStart()
 
+    if (this.options.showTime) {
+      console.log('@', colors.yellow(new Date().toLocaleString()))
+    }
+
+    if (this.options.benchmark) {
+      console.time(colors.dim.blue('> Execution time'))
+    }
+
     this.child = spawn(this.command, this.args, {
       stdio: 'inherit',
       argv0: this.command,
@@ -65,16 +73,30 @@ export default class Execution {
     this.child.on('error', console.error)
     this.child.on('exit', (code) => {
       if (code && code > 0) {
-        console.log('')
         console.log(
           colors.red(`Process exited with code: ${colors.yellow(String(code))}`)
+        )
+      }
+
+      if (this.options.benchmark) {
+        console.timeEnd(colors.dim.blue('> Execution time'))
+      }
+
+      if (this.options.watch && this.options.showInfo) {
+        console.log(
+          colors.dim.blue('> Watching for extensions:'),
+          colors.dim(
+            this.options.watchExtensions
+              .map((ext) => colors.yellow(ext))
+              .join(', ') || colors.yellow('*')
+          )
         )
       }
 
       if (this.options.readlineReload) {
         console.log(
           colors.blue.dim(
-            `⟳ Press ${colors.yellow('F5')} or ${colors.yellow(
+            `> Press ${colors.yellow('F5')} or ${colors.yellow(
               '^R'
             )} to reload...`
           )
@@ -94,6 +116,7 @@ export default class Execution {
   }
 
   private clearBeforeStart() {
+    return
     if (this.options.clearOnReload) {
       process.stdout.write('\x1Bc')
       console.clear()
@@ -111,4 +134,7 @@ export type ExecuteOptions = {
   watchExtensions: string[]
   env: Record<string, string>
   shell: boolean
+  showInfo: boolean
+  showTime: boolean
+  benchmark: boolean
 }

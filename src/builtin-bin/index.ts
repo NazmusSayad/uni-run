@@ -107,7 +107,7 @@ export default [
   new Executor('HTML Server', {
     command: 'http-server',
     extensions: ['html', 'htm'],
-    watchExtensions: ['css', 'js', 'json'],
+    watchExtensions: ['css', 'js', 'javascript', 'json'],
     checkInstallationArgs: ['--version'],
     installCommands: [
       { command: 'npm', args: ['install', '-g', 'http-server'] },

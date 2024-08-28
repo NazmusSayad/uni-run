@@ -17,7 +17,7 @@ arg.app.on(([script, listArs, trailingArgs], flags) => {
 
   Execution.start(
     bin.getArgs(script, ...listArs, ...trailingArgs),
-    mapFlagsToOptions(flags, bin.config.watchExtensions)
+    mapFlagsToOptions(flags, bin)
   )
 })
 
