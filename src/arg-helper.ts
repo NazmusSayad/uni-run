@@ -6,7 +6,11 @@ export const executionConfig = NoArg.defineConfig({
   flags: {
     cwd: NoArg.string()
       .default(process.cwd())
-      .description('The current working directory'),
+      .description('Current working directory'),
+
+    shell: NoArg.boolean()
+      .default(false)
+      .description('Run the script in a shell for more low-level control'),
 
     clear: NoArg.boolean()
       .default(true)
@@ -15,7 +19,7 @@ export const executionConfig = NoArg.defineConfig({
 
     reloadKey: NoArg.boolean()
       .default(true)
-      .description('Reload the page when pressing "Ctrl+R" or "F5"')
+      .description("Reload the page when pressing 'Ctrl+R' or 'F5'")
       .aliases('rk'),
 
     watch: NoArg.boolean()
@@ -35,12 +39,16 @@ export const executionConfig = NoArg.defineConfig({
 
     ignore: NoArg.array(NoArg.string())
       .default([])
-      .description('Ignore the given targets')
+      .description('Ignore the given folders/files')
       .aliases('ig'),
 
     env: NoArg.array(NoArg.string())
       .default([])
       .description('Environment variables'),
+
+    nodeDev: NoArg.boolean()
+      .default(false)
+      .description('Set NODE_ENV to "development"'),
   },
 
   listArgument: {
@@ -52,7 +60,7 @@ export const executionConfig = NoArg.defineConfig({
   trailingArguments: '--',
 
   customRenderHelp: {
-    helpUsageTrailingArgsLabel: '--args/flags for script',
+    helpUsageTrailingArgsLabel: '...[args/flags for script]',
   },
 })
 
@@ -62,13 +70,18 @@ export function mapFlagsToOptions(
 ): ExecuteOptions {
   return {
     cwd: flags.cwd,
+    shell: flags.shell,
     clearOnReload: flags.clear,
     readlineReload: flags.reloadKey,
-    env: flags.env.reduce((acc: any, env) => {
-      const [key, value] = env.split('=')
-      acc[key] = value
-      return acc
-    }, {}),
+    env: {
+      ...flags.env.reduce((acc: any, env) => {
+        const [key, value] = env.split('=')
+        acc[key] = value
+        return acc
+      }, {}),
+
+      ...(flags.nodeDev ? { NODE_ENV: 'development' } : {}),
+    },
 
     watch: flags.watch,
     watchDelay: flags.delay,

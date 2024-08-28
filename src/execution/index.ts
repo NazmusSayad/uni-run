@@ -56,7 +56,9 @@ export default class Execution {
 
     this.child = spawn(this.command, this.args, {
       stdio: 'inherit',
+      argv0: this.command,
       cwd: this.options.cwd,
+      shell: this.options.shell,
       env: { ...this.options.env },
     })
 
@@ -108,4 +110,5 @@ export type ExecuteOptions = {
   watchIgnore: string[]
   watchExtensions: string[]
   env: Record<string, string>
+  shell: boolean
 }
