@@ -116,7 +116,6 @@ export default class Execution {
   }
 
   private clearBeforeStart() {
-    return
     if (this.options.clearOnReload) {
       process.stdout.write('\x1Bc')
       console.clear()
