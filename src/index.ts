@@ -11,29 +11,26 @@ arg.app.on(([script, listArs, trailingArgs], flags) => {
     return console.log('You may try "ur exec bin script.ext - --flags"')
   }
 
-  if (!bin.isInstalled()) {
-    return bin.renderHowToInstall()
-  }
-
-  Execution.start(
-    bin.getArgs(script, ...listArs, ...trailingArgs),
-    mapFlagsToOptions(flags, bin)
-  )
+  const executionOptions = mapFlagsToOptions(flags, bin)
+  bin.start(executionOptions, [script, ...listArs, ...trailingArgs])
 })
 
 arg.exec.on(([listArs, trailingArgs], flags) => {
   Execution.start([...listArs, ...trailingArgs], mapFlagsToOptions(flags))
 })
 
-arg.support.on(() => {
+arg.list.on(() => {
   console.log('Supported scripts:')
   builtinBin
     .sort((a, b) => {
-      if (a.name < b.name) return -1
-      if (a.name > b.name) return 1
+      const aName = a.getName()
+      const bName = b.getName()
+
+      if (aName < bName) return -1
+      if (aName > bName) return 1
       return 0
     })
     .forEach((bin) => {
-      console.log(`- ${bin.name}`)
+      console.log(`- ${bin.getName()}`)
     })
 })

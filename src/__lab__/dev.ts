@@ -8,12 +8,13 @@ import { app } from '../arg'
 //   'js',
 // ])
 
+console.log('app.start')
 app.start([
-  '-h',
-  // './scripts/main.ts',
-  // '--env',
-  // 'NODE_ENV=development',
-  // 'OTHER_ENV=other',
+  // '-h',
+  './scripts/main.ts',
+  '--clear=false',
+  '--env=NODE_ENV=development',
+  'OTHER_ENV=thing',
 ])
 // app.start(['./scripts/index.js'])
 // app.start(['./scripts/main.py'])

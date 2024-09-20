@@ -1,6 +1,5 @@
 import NoArg from 'noarg'
 import type { app } from './arg'
-import { ExecuteOptions } from './execution'
 import Executor from './builtin-bin/Executor'
 
 export const executionConfig = NoArg.defineConfig({
@@ -59,9 +58,15 @@ export const executionConfig = NoArg.defineConfig({
       .default([])
       .description('Environment variables'),
 
+    // Extra flags
+
     nodeDev: NoArg.boolean()
       .default(false)
       .description('Set NODE_ENV to "development"'),
+
+    tsn: NoArg.boolean()
+      .default(false)
+      .description('Run the script with ts-node'),
   },
 
   listArgument: {
@@ -77,10 +82,11 @@ export const executionConfig = NoArg.defineConfig({
   },
 })
 
+export type ExecuteOptions = ReturnType<typeof mapFlagsToOptions>
 export function mapFlagsToOptions(
   flags: NoArg.InferFlags<typeof app>,
   bin?: Executor
-): ExecuteOptions {
+) {
   return {
     cwd: flags.cwd,
     shell: flags.shell,
@@ -93,12 +99,11 @@ export function mapFlagsToOptions(
 
     watch: flags.watch,
     watchDelay: flags.delay,
-    watchExtensions:
-      (flags.ext.length ? flags.ext : bin?.config.watchExtensions) ??
-      bin?.config.extensions ??
-      [],
     watchIgnore: flags.ignore,
+    watchExtensions:
+      (flags.ext.length ? flags.ext : bin?.getRelatedExts()) || [],
 
+    tsNode: flags['tsn'],
     env: {
       ...flags.env.reduce((acc: any, env) => {
         const [key, value] = env.split('=')
@@ -107,6 +112,6 @@ export function mapFlagsToOptions(
       }, {}),
 
       ...(flags.nodeDev ? { NODE_ENV: 'development' } : {}),
-    },
+    } as NodeJS.ProcessEnv,
   }
 }

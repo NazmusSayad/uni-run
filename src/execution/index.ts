@@ -4,6 +4,7 @@ import { ChildProcess } from 'child_process'
 import watcher from './watcher'
 import colors from '../lib/colors'
 import killProcess from './kill-process'
+import { ExecuteOptions } from '../arg-helper'
 
 export default class Execution {
   private child: ChildProcess | null = null
@@ -121,19 +122,4 @@ export default class Execution {
       console.clear()
     }
   }
-}
-
-export type ExecuteOptions = {
-  cwd: string
-  clearOnReload: boolean
-  readlineReload: boolean
-  watch: boolean
-  watchDelay: number
-  watchIgnore: string[]
-  watchExtensions: string[]
-  env: Record<string, string>
-  shell: boolean
-  showInfo: boolean
-  showTime: boolean
-  benchmark: boolean
 }

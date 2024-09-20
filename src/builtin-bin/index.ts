@@ -2,120 +2,126 @@ import Executor from './Executor'
 
 export default [
   new Executor('Node.js', {
-    command: 'node',
     extensions: ['js', 'javascript', 'jsx', 'cjs', 'cjsx', 'mjs', 'mjsx'],
-    watchExtensions: ['html', 'css', 'json'],
 
-    checkInstallationArgs: ['--version'],
-    howToInstall: () => {
-      console.log('Please install Node.js from https://nodejs.org')
+    checkInstallation: ['node', '--version'],
+    installMessage: 'Please install Node.js from https://nodejs.org',
+
+    run(args) {
+      return ['node', ...args]
     },
   }),
 
   new Executor('TypeScript', {
-    command: 'ts-node',
     extensions: ['ts', 'tsx', 'cts', 'ctsx', 'mts', 'mtsx'],
-    watchExtensions: [
-      'html',
-      'css',
-      'json',
-      'js',
-      'javascript',
-      'jsx',
-      'cjs',
-      'cjsx',
-      'mjs',
-      'mjsx',
-    ],
+    watchExtensions: ['js', 'javascript', 'jsx', 'cjs', 'cjsx', 'mjs', 'mjsx'],
 
-    checkInstallationArgs: ['--version'],
-    installCommands: [{ command: 'npm', args: ['install', '-g', 'ts-node'] }],
-    howToInstall: () => {
-      console.log(
-        'Please install ts-node from https://www.npmjs.com/package/ts-node'
-      )
+    checkInstallation(options) {
+      return options.tsNode ? ['ts-node', '--version'] : ['tsx', '--version']
+    },
+    installCommands(options) {
+      return options.tsNode
+        ? ['npm install -g ts-node']
+        : ['npm install -g tsx']
+    },
+    installMessage: 'Please install tsx. More: https://tsx.is',
+
+    run(args, options) {
+      return options.tsNode ? ['ts-node', ...args] : ['tsx', ...args]
     },
   }),
 
   new Executor('Python', {
-    command: 'python',
     extensions: ['py'],
-    checkInstallationArgs: ['--version'],
-    howToInstall: () => {
-      console.log('Please install Python from https://www.python.org')
+
+    checkInstallation: ['python', '--version'],
+    installMessage: 'Please install Python from https://www.python.org',
+
+    run(args) {
+      return ['python', ...args]
     },
   }),
 
   new Executor('Java - Oracle', {
-    command: 'java',
     extensions: ['java'],
-    checkInstallationArgs: ['--version'],
-    howToInstall: () => {
-      console.log('Please install Java from https://www.oracle.com/java')
+
+    checkInstallation: ['java', '--version'],
+    installMessage: 'Please install Java from https://www.oracle.com/java',
+
+    run(args) {
+      return ['java', ...args]
     },
   }),
 
   new Executor('Powershell', {
-    command: 'powershell',
     extensions: ['ps1'],
-    checkInstallationArgs: ['-command', '"Get-Host"'],
-    howToInstall: () => {
-      console.log(
-        'Please install Powershell from https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell'
-      )
+
+    checkInstallation: ['powershell', '-command', 'echo ok'],
+    installMessage:
+      'Please install Powershell from https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell',
+
+    run(args) {
+      return ['powershell', '-File', ...args]
     },
   }),
 
   new Executor('Command Prompt', {
-    command: 'cmd',
-    runArgs: ['/c'],
     extensions: ['cmd', 'bat'],
-    checkInstallationArgs: ['/c', 'echo', 'ok'],
-    howToInstall: () => {
-      console.log('Please install Command Prompt from Windows')
+
+    checkInstallation: ['cmd', '/c', 'echo ok'],
+    installMessage: 'Please install Command Prompt from Windows',
+
+    run(args) {
+      return ['cmd', '/c', ...args]
     },
   }),
 
   new Executor('Shell', {
-    command: 'bash',
     extensions: ['sh'],
-    checkInstallationArgs: ['--version'],
-    howToInstall: () => {
-      console.log('Please install Bash from https://www.gnu.org/software/bash')
+
+    checkInstallation: ['bash', '--version'],
+    installMessage:
+      'Please install Bash from https://www.gnu.org/software/bash',
+
+    run(args) {
+      return ['bash', ...args]
     },
   }),
 
   new Executor('Lua', {
-    command: 'lua',
     extensions: ['lua'],
-    checkInstallationArgs: ['--version'],
-    howToInstall: () => {
-      console.log('Please install Lua from https://www.lua.org')
+
+    checkInstallation: ['lua', '--version'],
+    installMessage: 'Please install Lua from https://www.lua.org',
+
+    run(args) {
+      return ['lua', ...args]
     },
   }),
 
   new Executor('SASS (CSS)', {
-    command: 'sass',
     extensions: ['sass', 'scss'],
-    checkInstallationArgs: ['--version'],
-    installCommands: [{ command: 'npm', args: ['install', '-g', 'sass'] }],
-    howToInstall: () => {
-      console.log('Please install SASS from https://sass-lang.com')
+
+    checkInstallation: ['sass', '--version'],
+    installCommands: ['npm install -g sass'],
+    installMessage: 'Please install SASS from https://sass-lang.com',
+
+    run(args) {
+      return ['sass', ...args]
     },
   }),
 
   new Executor('HTML Server', {
-    command: 'http-server',
     extensions: ['html', 'htm'],
     watchExtensions: ['css', 'js', 'javascript', 'json'],
-    checkInstallationArgs: ['--version'],
-    installCommands: [
-      { command: 'npm', args: ['install', '-g', 'http-server'] },
-    ],
-    howToInstall: () => {
-      console.log(
-        'Please install http-server from https://www.npmjs.com/package/http-server'
-      )
+
+    checkInstallation: ['http-server', '--version'],
+    installCommands: ['npm install -g http-server'],
+    installMessage:
+      'Please install http-server from https://www.npmjs.com/package/http-server',
+
+    run(args) {
+      return ['http-server', ...args]
     },
   }),
 ]
