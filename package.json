@@ -23,8 +23,8 @@
   },
   "devDependencies": {
     "@types/cross-spawn": "^6.0.6",
-    "@types/node": "^22.5.0",
-    "typescript": "^5.5.4"
+    "@types/node": "^22.5.5",
+    "typescript": "^5.6.2"
   },
   "repository": {
     "type": "git",
