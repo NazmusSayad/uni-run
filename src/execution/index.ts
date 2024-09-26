@@ -8,6 +8,8 @@ import { ExecuteOptions } from '../arg-helper'
 
 export default class Execution {
   private child: ChildProcess | null = null
+  private benchMarkText = colors.dim.blue('> Execution time')
+  private isBenchmarkRunning = false
 
   static start([command, ...args]: string[], options: ExecuteOptions) {
     return new Execution(command, args, options)
@@ -23,6 +25,11 @@ export default class Execution {
   }
 
   private setup() {
+    if (this.options.benchmarkPrefix) {
+      this.benchMarkText =
+        colors.bold(this.options.benchmarkPrefix) + ' ' + this.benchMarkText
+    }
+
     if (this.options.readlineReload) {
       readline.emitKeypressEvents(process.stdin)
       process.stdin.setRawMode?.(true)
@@ -60,7 +67,13 @@ export default class Execution {
     }
 
     if (this.options.benchmark) {
-      console.time(colors.dim.blue('> Execution time'))
+      if (this.isBenchmarkRunning) {
+        console.timeEnd(this.benchMarkText)
+      } else {
+        this.isBenchmarkRunning = true
+      }
+
+      console.time(this.benchMarkText)
     }
 
     this.child = spawn(this.command, this.args, {
@@ -80,7 +93,8 @@ export default class Execution {
       }
 
       if (this.options.benchmark) {
-        console.timeEnd(colors.dim.blue('> Execution time'))
+        this.isBenchmarkRunning = false
+        console.timeEnd(this.benchMarkText)
       }
 
       if (this.options.watch && this.options.showInfo) {

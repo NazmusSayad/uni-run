@@ -24,6 +24,10 @@ export const executionConfig = NoArg.defineConfig({
       .default(false)
       .description('Show the execution time'),
 
+    benchPrefix: NoArg.string().description(
+      'The prefix for the benchmark to show at the start of the line'
+    ),
+
     clear: NoArg.boolean()
       .default(true)
       .description('Clear the console before running the script')
@@ -93,6 +97,7 @@ export function mapFlagsToOptions(
     showInfo: flags.info,
     showTime: flags.time,
     benchmark: flags.bench,
+    benchmarkPrefix: flags.benchPrefix,
 
     clearOnReload: flags.clear,
     readlineReload: flags.reloadKey,

@@ -32,8 +32,8 @@ export default function (
     },
 
     interval: options.debounceDelay / 2,
-    persistent: true,
     ignoreInitial: true,
+    persistent: true,
   })
 
   watcher.on('add', (event) => {

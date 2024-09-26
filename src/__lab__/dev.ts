@@ -15,6 +15,8 @@ app.start([
   '--clear=false',
   '--env=NODE_ENV=development',
   'OTHER_ENV=thing',
+  '--bench',
+  '--benchPrefix=TypeScript',
 ])
 // app.start(['./scripts/index.js'])
 // app.start(['./scripts/main.py'])
