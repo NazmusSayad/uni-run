@@ -4,7 +4,7 @@ const { default: NoArg } = require('noarg')
 const app = NoArg.create('app', {
   arguments: [
     {
-      name: 'random',
+      name: 'rand',
       type: NoArg.string().ask('What is the random number?'),
     },
   ],

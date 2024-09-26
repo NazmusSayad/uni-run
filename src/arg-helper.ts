@@ -12,9 +12,11 @@ export const executionConfig = NoArg.defineConfig({
       .aliases('w')
       .default(true)
       .description('Watch for changes'),
-    noWatch: NoArg.boolean()
+    exit: NoArg.boolean()
       .default(false)
-      .description('Disable `watch` and `reloadKey` features'),
+      .description(
+        'Exit after code execution, disabling `watch` and `reloadKey`'
+      ),
 
     clear: NoArg.boolean()
       .aliases('c')
@@ -29,10 +31,14 @@ export const executionConfig = NoArg.defineConfig({
       .aliases('e')
       .default([])
       .description('Looks for changes only of the given extensions'),
-    ignore: NoArg.array(NoArg.string())
-      .aliases('ig')
+    include: NoArg.array(NoArg.string())
+      .aliases('in')
       .default([])
-      .description('Ignore the given folders/files'),
+      .description('Only watch the given folders/files'),
+    exclude: NoArg.array(NoArg.string())
+      .aliases('ex')
+      .default([])
+      .description('Exclude the given folders/files'),
 
     bench: NoArg.boolean()
       .aliases('b')
@@ -98,10 +104,11 @@ export function mapFlagsToOptions(
     benchmarkPrefix: flags.benchPrefix,
 
     clearOnReload: flags.clear,
-    keystrokeReload: flags.noWatch ? false : flags.reloadKey,
-    watch: flags.noWatch ? false : flags.watch,
+    keystrokeReload: flags.exit ? false : flags.reloadKey,
+    watch: flags.exit ? false : flags.watch,
     watchDelay: flags.delay,
-    watchIgnore: flags.ignore,
+    watchInclude: flags.include,
+    watchExclude: flags.exclude,
     watchExtensions:
       (flags.ext.length ? flags.ext : bin?.getRelatedExts()) || [],
 

@@ -48,12 +48,17 @@ export default class Execution {
     if (this.options.watch) {
       watcher(
         this.options.cwd,
+
+        this.options.watchInclude.length
+          ? this.options.watchInclude
+          : [this.options.cwd],
+
+        () => this.runProcess(),
         {
-          ignore: this.options.watchIgnore,
+          ignore: this.options.watchExclude,
           debounceDelay: this.options.watchDelay,
           extensions: new Set(this.options.watchExtensions),
-        },
-        () => this.runProcess()
+        }
       )
     }
   }

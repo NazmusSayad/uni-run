@@ -1,15 +1,14 @@
 {
   "name": "uni-run",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Universal Runner for many language",
   "scripts": {
     "dev": "npmize dev",
     "build": "npmize build",
     "tsc": "tsc --watch --noEmit",
     "lab": "run ./src/__lab__/index.ts",
-    "ts": "tsx --watch ./src/__lab__/index.ts",
-    "cjs": "node --watch ./dist/__lab__/index.cjs",
-    "mjs": "node --watch ./dist/__lab__/index.mjs"
+    "cjs": "node ./dist/__lab__/index.cjs",
+    "mjs": "node ./dist/__lab__/index.mjs"
   },
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",

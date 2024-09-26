@@ -10,22 +10,25 @@ export type WatcherOptions = {
 }
 
 export default function (
-  dir: string,
-  options: WatcherOptions,
-  callback: () => void
+  cwd: string,
+  targets: string | string[],
+  callback: () => void,
+  options: WatcherOptions
 ) {
-  const ig = gitignore(dir, options.ignore)
+  const ig = gitignore(cwd, options.ignore)
   const debounce = createDebounce(options.debounceDelay)
 
-  const watcher = chokidar.watch(dir, {
+  const watcher = chokidar.watch(targets, {
     ignored: (filePath) => {
-      const relativePath = path.relative(dir, filePath)
-      if (!relativePath) return false
-      if (ig.ignores(relativePath)) return true
+      for (const target of targets) {
+        const relativePath = path.relative(target, filePath)
+        if (!relativePath) return false
+        if (ig.ignores(relativePath)) return true
 
-      if (options.extensions.size) {
-        const ext = path.extname(relativePath).slice(1)
-        if (ext && !options.extensions.has(ext)) return true
+        if (options.extensions.size) {
+          const ext = path.extname(relativePath).slice(1)
+          if (ext && !options.extensions.has(ext)) return true
+        }
       }
 
       return false
@@ -36,15 +39,7 @@ export default function (
     persistent: true,
   })
 
-  watcher.on('add', (event) => {
-    debounce(() => callback())
-  })
-
-  watcher.on('change', (event) => {
-    debounce(() => callback())
-  })
-
-  watcher.on('unlink', () => {
-    debounce(() => callback())
-  })
+  watcher.on('add', () => debounce(() => callback()))
+  watcher.on('change', () => debounce(() => callback()))
+  watcher.on('unlink', () => debounce(() => callback()))
 }
