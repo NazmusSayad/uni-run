@@ -30,7 +30,7 @@ export default class Execution {
         colors.bold(this.options.benchmarkPrefix) + ' ' + this.benchMarkText
     }
 
-    if (this.options.readlineReload) {
+    if (this.options.keystrokeReload) {
       readline.emitKeypressEvents(process.stdin)
       process.stdin.setRawMode?.(true)
       process.stdin.on('keypress', (_, key) => {
@@ -108,7 +108,7 @@ export default class Execution {
         )
       }
 
-      if (this.options.readlineReload) {
+      if (this.options.keystrokeReload) {
         console.log(
           colors.blue.dim(
             `> Press ${colors.yellow('F5')} or ${colors.yellow(

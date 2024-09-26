@@ -8,15 +8,16 @@ import { app } from '../arg'
 //   'js',
 // ])
 
-console.log('app.start')
 app.start([
   // '-h',
   './scripts/main.ts',
   '--clear=false',
   '--env=NODE_ENV=development',
   'OTHER_ENV=thing',
-  '--bench',
-  '--benchPrefix=TypeScript',
+  '--benchPrefix',
+  'HELLO',
+  '--info',
+  '--noWatch',
 ])
 // app.start(['./scripts/index.js'])
 // app.start(['./scripts/main.py'])

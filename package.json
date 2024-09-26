@@ -4,6 +4,8 @@
   "version": "1.0.5",
   "type": "commonjs",
   "scripts": {
+    "lab": "run ./src/__lab__/index.ts",
+    "start": "node ./dist/__lab__/index.js",
     "ts": "tsx --watch ./src/__lab__/index.ts",
     "js": "node --watch ./dist/__lab__/index.js",
     "tsc": "tsc --watch --noEmit",
@@ -24,6 +26,7 @@
   "devDependencies": {
     "@types/cross-spawn": "^6.0.6",
     "@types/node": "^22.5.5",
+    "npmize": "^1.1.1",
     "typescript": "^5.6.2"
   },
   "repository": {

@@ -4,10 +4,47 @@ import Executor from './builtin-bin/Executor'
 
 export const executionConfig = NoArg.defineConfig({
   flags: {
+    reloadKey: NoArg.boolean()
+      .aliases('rk')
+      .default(true)
+      .description("Reload the page when pressing 'Ctrl+R' or 'F5'"),
+    watch: NoArg.boolean()
+      .aliases('w')
+      .default(true)
+      .description('Watch for changes'),
+    noWatch: NoArg.boolean()
+      .default(false)
+      .description('Disable `watch` and `reloadKey` features'),
+
+    clear: NoArg.boolean()
+      .aliases('c')
+      .default(true)
+      .description('Clear the console before running the script'),
+    delay: NoArg.number()
+      .aliases('d')
+      .default(100)
+      .description('The delay to wait for the watcher to trigger'),
+
+    ext: NoArg.array(NoArg.string())
+      .aliases('e')
+      .default([])
+      .description('Looks for changes only of the given extensions'),
+    ignore: NoArg.array(NoArg.string())
+      .aliases('ig')
+      .default([])
+      .description('Ignore the given folders/files'),
+
+    bench: NoArg.boolean()
+      .aliases('b')
+      .description('Calculate the execution time'),
+    benchPrefix: NoArg.string()
+      .aliases('bp')
+      .minLength(1)
+      .description('The prefix to show before the execution time'),
+
     cwd: NoArg.string()
       .default(process.cwd())
       .description('Current working directory'),
-
     shell: NoArg.boolean()
       .default(false)
       .description('Run the script in a shell for more low-level control'),
@@ -15,48 +52,9 @@ export const executionConfig = NoArg.defineConfig({
     info: NoArg.boolean()
       .default(false)
       .description('Show information about the script'),
-
     time: NoArg.boolean()
       .default(false)
       .description('Show the execution time at the start'),
-
-    bench: NoArg.boolean()
-      .default(false)
-      .description('Show the execution time'),
-
-    benchPrefix: NoArg.string().description(
-      'The prefix for the benchmark to show at the start of the line'
-    ),
-
-    clear: NoArg.boolean()
-      .default(true)
-      .description('Clear the console before running the script')
-      .aliases('c'),
-
-    reloadKey: NoArg.boolean()
-      .default(true)
-      .description("Reload the page when pressing 'Ctrl+R' or 'F5'")
-      .aliases('rk'),
-
-    watch: NoArg.boolean()
-      .default(true)
-      .description('Watch for changes')
-      .aliases('w'),
-
-    delay: NoArg.number()
-      .default(100)
-      .description('The delay to wait for the watcher to trigger')
-      .aliases('d'),
-
-    ext: NoArg.array(NoArg.string())
-      .default([])
-      .description('Looks for changes only of the given extensions')
-      .aliases('e'),
-
-    ignore: NoArg.array(NoArg.string())
-      .default([])
-      .description('Ignore the given folders/files')
-      .aliases('ig'),
 
     env: NoArg.array(NoArg.string())
       .default([])
@@ -96,13 +94,12 @@ export function mapFlagsToOptions(
     shell: flags.shell,
     showInfo: flags.info,
     showTime: flags.time,
-    benchmark: flags.bench,
+    benchmark: flags.bench ?? Boolean(flags.benchPrefix),
     benchmarkPrefix: flags.benchPrefix,
 
     clearOnReload: flags.clear,
-    readlineReload: flags.reloadKey,
-
-    watch: flags.watch,
+    keystrokeReload: flags.noWatch ? false : flags.reloadKey,
+    watch: flags.noWatch ? false : flags.watch,
     watchDelay: flags.delay,
     watchIgnore: flags.ignore,
     watchExtensions:

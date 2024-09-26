@@ -1,3 +1,3 @@
 console.clear()
-import '../index'
+import '../app'
 import './dev'

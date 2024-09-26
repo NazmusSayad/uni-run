@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import './index'
+import './app'
 
 import { app } from './arg'
 app.start()
