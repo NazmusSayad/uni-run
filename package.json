@@ -1,20 +1,21 @@
 {
   "name": "uni-run",
+  "version": "1.0.6",
   "description": "Universal Runner for many language",
-  "version": "1.0.5",
-  "type": "commonjs",
   "scripts": {
-    "lab": "run ./src/__lab__/index.ts",
-    "start": "node ./dist/__lab__/index.js",
-    "ts": "tsx --watch ./src/__lab__/index.ts",
-    "js": "node --watch ./dist/__lab__/index.js",
+    "dev": "npmize dev",
+    "build": "npmize build",
     "tsc": "tsc --watch --noEmit",
-    "dev": "tsc --watch",
-    "build": "node ./build.cjs"
+    "lab": "run ./src/__lab__/index.ts",
+    "ts": "tsx --watch ./src/__lab__/index.ts",
+    "cjs": "node --watch ./dist/__lab__/index.cjs",
+    "mjs": "node --watch ./dist/__lab__/index.mjs"
   },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
   "bin": {
-    "run": "./dist/bin.js",
-    "uni-run": "./dist/bin.js"
+    "run": "./dist/bin.cjs",
+    "uni-run": "./dist/bin.cjs"
   },
   "dependencies": {
     "ansi-colors": "^4.1.3",
@@ -26,7 +27,7 @@
   "devDependencies": {
     "@types/cross-spawn": "^6.0.6",
     "@types/node": "^22.5.5",
-    "npmize": "^1.1.1",
+    "npmize": "^1.1.3",
     "typescript": "^5.6.2"
   },
   "repository": {

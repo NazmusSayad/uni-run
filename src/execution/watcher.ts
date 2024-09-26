@@ -1,6 +1,6 @@
 import * as path from 'path'
-import * as chokidar from 'chokidar'
 import gitignore from './gitignore'
+import * as chokidar from 'chokidar'
 import { createDebounce } from '../utils/debounce'
 
 export type WatcherOptions = {
