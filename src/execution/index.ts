@@ -122,6 +122,8 @@ export default class Execution {
   private clearBeforeStart() {
     if (this.options.clearOnReload) {
       process.stdout.write('\x1Bc')
+      process.stdout.cursorTo(0, 0)
+      process.stdout.clearScreenDown()
       console.clear()
     }
   }
