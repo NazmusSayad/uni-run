@@ -75,7 +75,7 @@ export default class Execution {
       argv0: this.command,
       cwd: this.options.cwd,
       shell: this.options.shell,
-      env: { ...this.options.env },
+      env: { ...process.env, ...this.options.env },
       stdio: this.options.silent ? 'ignore' : 'inherit',
     })
 
