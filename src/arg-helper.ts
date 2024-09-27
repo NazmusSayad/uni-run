@@ -48,6 +48,9 @@ export const executionConfig = NoArg.defineConfig({
       .aliases('c')
       .default(true)
       .description('Clear the console before running the script'),
+    silent: NoArg.boolean()
+      .default(false)
+      .description('Do not show any output of the script'),
     cwd: NoArg.string()
       .default(process.cwd())
       .description('Current working directory'),
@@ -101,6 +104,7 @@ export function mapFlagsToOptions(
   return {
     cwd: flags.cwd,
     shell: flags.shell,
+    silent: flags.silent,
     stdinSafeMode: flags['safe-stdin'],
     showInfo: flags.info,
     showTime: flags.time,

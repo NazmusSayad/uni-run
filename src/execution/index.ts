@@ -8,7 +8,7 @@ import { ExecuteOptions } from '../arg-helper'
 
 export default class Execution {
   private child: ChildProcess | null = null
-  private benchMarkText = colors.dim.blue('> Execution time')
+  private benchMarkText = colors.dim.green('# Execution time')
   private isBenchmarkRunning = false
   private isExecutionExecutedAnyTime = false
 
@@ -70,15 +70,13 @@ export default class Execution {
     this.clearBeforeStart()
     this.renderInfoLogs()
 
-    const controller = new AbortController()
     this.isExecutionExecutedAnyTime = true
     this.child = spawn(this.command, this.args, {
-      stdio: 'inherit',
       argv0: this.command,
       cwd: this.options.cwd,
       shell: this.options.shell,
       env: { ...this.options.env },
-      signal: controller.signal,
+      stdio: this.options.silent ? 'ignore' : 'inherit',
     })
 
     this.child.on('exit', (code) => {
