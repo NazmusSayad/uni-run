@@ -91,7 +91,7 @@ export default [
   new Executor('Lua', {
     extensions: ['lua'],
 
-    checkInstallation: ['lua', '--version'],
+    checkInstallation: ['lua', '-v'],
     installMessage: 'Please install Lua from https://www.lua.org',
 
     run(args) {

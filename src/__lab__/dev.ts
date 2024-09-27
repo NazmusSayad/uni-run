@@ -20,4 +20,5 @@ import { app } from '../arg'
 // ])
 // app.start(['./scripts/index.js'])
 // app.start(['./scripts/master.java'])
-app.start(['./scripts/main.ts', '--silent', '--bench-prefix', 'BENCHMARK'])
+// app.start(['./scripts/main.ts', '--silent', '--bench-prefix', 'BENCHMARK'])
+app.start(['./scripts/test.lua'])
