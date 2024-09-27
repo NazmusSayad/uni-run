@@ -10,6 +10,7 @@ export default class Execution {
   private child: ChildProcess | null = null
   private benchMarkText = colors.dim.blue('> Execution time')
   private isBenchmarkRunning = false
+  private isExecutionExecutedAnyTime = false
 
   static start([command, ...args]: string[], options: ExecuteOptions) {
     return new Execution(command, args, options)
@@ -21,7 +22,7 @@ export default class Execution {
     private options: ExecuteOptions
   ) {
     this.setup()
-    this.runProcess()
+    this.startProcess()
   }
 
   private setup() {
@@ -32,15 +33,19 @@ export default class Execution {
 
     if (this.options.keystrokeReload) {
       readline.emitKeypressEvents(process.stdin)
-      process.stdin.setRawMode?.(true)
+
+      if (!this.options.stdinSafeMode) {
+        process.stdin.setRawMode?.(true)
+      }
+
       process.stdin.on('keypress', (_, key) => {
         if (key.name === 'f5' || (key.ctrl && key.name === 'r')) {
-          return this.runProcess()
+          return this.startProcess()
         }
 
         if (key.ctrl && key.name === 'c') {
           this.killProcess()
-          return process.exit(0)
+          process.exit(0)
         }
       })
     }
@@ -48,14 +53,11 @@ export default class Execution {
     if (this.options.watch) {
       watcher(
         this.options.cwd,
+        this.options.watchFocus,
 
-        this.options.watchInclude.length
-          ? this.options.watchInclude
-          : [this.options.cwd],
-
-        () => this.runProcess(),
+        () => this.startProcess(),
         {
-          ignore: this.options.watchExclude,
+          ignore: this.options.watchIgnore,
           debounceDelay: this.options.watchDelay,
           extensions: new Set(this.options.watchExtensions),
         }
@@ -63,33 +65,22 @@ export default class Execution {
     }
   }
 
-  private runProcess() {
+  private startProcess() {
     this.killProcess()
     this.clearBeforeStart()
+    this.renderInfoLogs()
 
-    if (this.options.showTime) {
-      console.log('@', colors.yellow(new Date().toLocaleString()))
-    }
-
-    if (this.options.benchmark) {
-      if (this.isBenchmarkRunning) {
-        console.timeEnd(this.benchMarkText)
-      } else {
-        this.isBenchmarkRunning = true
-      }
-
-      console.time(this.benchMarkText)
-    }
-
+    const controller = new AbortController()
+    this.isExecutionExecutedAnyTime = true
     this.child = spawn(this.command, this.args, {
       stdio: 'inherit',
       argv0: this.command,
       cwd: this.options.cwd,
       shell: this.options.shell,
       env: { ...this.options.env },
+      signal: controller.signal,
     })
 
-    this.child.on('error', console.error)
     this.child.on('exit', (code) => {
       if (code && code > 0) {
         console.log(
@@ -97,20 +88,9 @@ export default class Execution {
         )
       }
 
-      if (this.options.benchmark) {
-        this.isBenchmarkRunning = false
+      if (this.isBenchmarkRunning) {
         console.timeEnd(this.benchMarkText)
-      }
-
-      if (this.options.watch && this.options.showInfo) {
-        console.log(
-          colors.dim.blue('> Watching for extensions:'),
-          colors.dim(
-            this.options.watchExtensions
-              .map((ext) => colors.yellow(ext))
-              .join(', ') || colors.yellow('*')
-          )
-        )
+        this.isBenchmarkRunning = false
       }
 
       if (this.options.keystrokeReload) {
@@ -128,8 +108,12 @@ export default class Execution {
   private killProcess() {
     if (!this.child) return
     this.child.removeAllListeners()
-    if (!killProcess(this.child)) {
-      console.error(colors.red('Failed to kill the previous process'))
+    const isKilled = killProcess(this.child)
+    if (!isKilled) {
+      console.error(
+        colors.bgRed('ERROR:'),
+        colors.red('Failed to kill the previous process')
+      )
     }
 
     this.child = null
@@ -139,6 +123,70 @@ export default class Execution {
     if (this.options.clearOnReload) {
       process.stdout.write('\x1Bc')
       console.clear()
+    }
+  }
+
+  private renderInfoLogs() {
+    if (this.options.showInfo && !this.isExecutionExecutedAnyTime) {
+      if (this.options.watch) {
+        console.log(
+          colors.dim.bgGreen('INFO:'),
+          colors.green('Watching for extensions:'),
+          colors.dim(
+            this.options.watchExtensions
+              .map((ext) => colors.reset(ext))
+              .join(', ') || colors.yellow('*')
+          )
+        )
+      }
+
+      if (this.options.watchFocus.length) {
+        console.log(
+          colors.dim.bgGreen('INFO:'),
+          colors.green('Watching target:'),
+          colors.dim(
+            this.options.watchFocus
+              .map((ext) => colors.reset(ext))
+              .join(', ') || colors.yellow('*')
+          )
+        )
+      }
+
+      if (this.options.watchIgnore.length) {
+        console.log(
+          colors.dim.bgGreen('INFO:'),
+          colors.green('Watching ignore:'),
+          colors.dim(
+            this.options.watchIgnore
+              .map((ext) => colors.reset(ext))
+              .join(', ') || colors.yellow('*')
+          )
+        )
+      }
+
+      if (this.options.shell) {
+        console.log(
+          colors.dim.bgGreen('INFO:'),
+          colors.green('SHELL mode enabled')
+        )
+      }
+    }
+
+    if (this.options.showTime) {
+      console.log(
+        colors.dim.bgGreen('TIME:'),
+        colors.green(new Date().toLocaleString())
+      )
+    }
+
+    if (this.options.benchmark) {
+      if (this.isBenchmarkRunning) {
+        console.timeEnd(this.benchMarkText)
+      } else {
+        this.isBenchmarkRunning = true
+      }
+
+      console.time(this.benchMarkText)
     }
   }
 }

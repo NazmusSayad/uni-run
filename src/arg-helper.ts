@@ -4,56 +4,59 @@ import Executor from './builtin-bin/Executor'
 
 export const executionConfig = NoArg.defineConfig({
   flags: {
-    reloadKey: NoArg.boolean()
-      .aliases('rk')
+    // Watch/Reload flags
+    'key-reload': NoArg.boolean()
+      .aliases('k')
       .default(true)
       .description("Reload the page when pressing 'Ctrl+R' or 'F5'"),
     watch: NoArg.boolean()
       .aliases('w')
       .default(true)
-      .description('Watch for changes'),
+      .description('Watch for file changes and reload the script'),
     exit: NoArg.boolean()
       .default(false)
       .description(
         'Exit after code execution, disabling `watch` and `reloadKey`'
       ),
+    delay: NoArg.number()
+      .aliases('d')
+      .default(100)
+      .description('The delay to wait for the watcher to trigger'),
+    ext: NoArg.array(NoArg.string())
+      .aliases('e')
+      .default([])
+      .description('Looks for changes only of the given extensions'),
+    focus: NoArg.array(NoArg.string())
+      .aliases('f')
+      .default([])
+      .description('Only watch the given items. `chokidar` syntax'),
+    ignore: NoArg.array(NoArg.string())
+      .aliases('ig')
+      .default([])
+      .description('Exclude the given items. `gitignore` syntax'),
+
+    // Benchmark flags
+    bench: NoArg.boolean()
+      .aliases('b')
+      .description('Calculate the execution time'),
+    'bench-prefix': NoArg.string()
+      .aliases('bp')
+      .minLength(1)
+      .description('The prefix to show before the execution time'),
 
     clear: NoArg.boolean()
       .aliases('c')
       .default(true)
       .description('Clear the console before running the script'),
-    delay: NoArg.number()
-      .aliases('d')
-      .default(100)
-      .description('The delay to wait for the watcher to trigger'),
-
-    ext: NoArg.array(NoArg.string())
-      .aliases('e')
-      .default([])
-      .description('Looks for changes only of the given extensions'),
-    include: NoArg.array(NoArg.string())
-      .aliases('in')
-      .default([])
-      .description('Only watch the given folders/files'),
-    exclude: NoArg.array(NoArg.string())
-      .aliases('ex')
-      .default([])
-      .description('Exclude the given folders/files'),
-
-    bench: NoArg.boolean()
-      .aliases('b')
-      .description('Calculate the execution time'),
-    benchPrefix: NoArg.string()
-      .aliases('bp')
-      .minLength(1)
-      .description('The prefix to show before the execution time'),
-
     cwd: NoArg.string()
       .default(process.cwd())
       .description('Current working directory'),
     shell: NoArg.boolean()
       .default(false)
       .description('Run the script in a shell for more low-level control'),
+    'safe-stdin': NoArg.boolean()
+      .default(false)
+      .description('Disable raw mode for stdin (useful for some scripts)'),
 
     info: NoArg.boolean()
       .default(false)
@@ -68,13 +71,13 @@ export const executionConfig = NoArg.defineConfig({
 
     // Extra flags
 
-    nodeDev: NoArg.boolean()
+    'node-dev': NoArg.boolean()
       .default(false)
       .description('Set NODE_ENV to "development"'),
 
     tsn: NoArg.boolean()
       .default(false)
-      .description('Run the script with ts-node'),
+      .description('Run the script with ts-node (TypeScript)'),
   },
 
   listArgument: {
@@ -98,17 +101,18 @@ export function mapFlagsToOptions(
   return {
     cwd: flags.cwd,
     shell: flags.shell,
+    stdinSafeMode: flags['safe-stdin'],
     showInfo: flags.info,
     showTime: flags.time,
-    benchmark: flags.bench ?? Boolean(flags.benchPrefix),
-    benchmarkPrefix: flags.benchPrefix,
+    benchmark: flags.bench ?? Boolean(flags['bench-prefix']),
+    benchmarkPrefix: flags['bench-prefix'],
 
     clearOnReload: flags.clear,
-    keystrokeReload: flags.exit ? false : flags.reloadKey,
+    keystrokeReload: flags.exit ? false : flags['key-reload'],
     watch: flags.exit ? false : flags.watch,
     watchDelay: flags.delay,
-    watchInclude: flags.include,
-    watchExclude: flags.exclude,
+    watchFocus: flags.focus.length ? flags.focus : [flags.cwd],
+    watchIgnore: flags.ignore,
     watchExtensions:
       (flags.ext.length ? flags.ext : bin?.getRelatedExts()) || [],
 
@@ -120,7 +124,7 @@ export function mapFlagsToOptions(
         return acc
       }, {}),
 
-      ...(flags.nodeDev ? { NODE_ENV: 'development' } : {}),
+      ...(flags['node-dev'] ? { NODE_ENV: 'development' } : {}),
     } as NodeJS.ProcessEnv,
   }
 }

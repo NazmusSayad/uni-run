@@ -8,13 +8,16 @@ import { app } from '../arg'
 //   'js',
 // ])
 
-// app.start([
-//   // '-h',
-//   './scripts/main.ts',
-//   '--clear=false',
-//   '--env=NODE_ENV=development',
-//   'OTHER_ENV=thing',
-// ])
+app.start([
+  '-h',
+  './scripts/main.js',
+  '--env=NODE_ENV=development',
+  'OTHER_ENV=thing',
+  '--info',
+  '--time',
+  '--focus',
+  'scripts',
+])
 // app.start(['./scripts/index.js'])
-app.start(['./scripts/main.py'])
+// app.start(['./scripts/main.py'])
 // app.start(['./scripts/master.java'])
