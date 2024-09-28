@@ -44,8 +44,14 @@ arg.exec.on(([listArs, trailingArgs], flags) => {
 })
 
 arg.list.on(() => {
+  const userExecutors = getUserExecutors()
+  const totalExecutors = [
+    ...(Array.isArray(userExecutors) ? userExecutors : []),
+    ...scriptExecutors,
+  ]
+
   console.log('Supported scripts:')
-  scriptExecutors
+  totalExecutors
     .sort((a, b) => {
       if (a.name < b.name) return -1
       if (a.name > b.name) return 1

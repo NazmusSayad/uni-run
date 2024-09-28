@@ -69,7 +69,7 @@ Here `--some someValue` will be passed to `node` and will be ignored by `uni-run
 
 ## Define Custom Configuration
 
-Create `.uni-run.json` file in your user home directory.
+Create `.uni-run.json` file in your user home directory or current working directory.
 
 ```json
 {
@@ -82,7 +82,7 @@ Now you can run your script with `run script.js` or `run script.ts` with your ow
 
 ## Setup Custom Executors
 
-Create `.uni-run.cjs` file in your user home directory.
+Create `.uni-run.cjs` file in your user home directory or current working directory.
 
 ```js
 module.exports = [
