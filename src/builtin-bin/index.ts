@@ -87,6 +87,17 @@ export default [
       return ['bash', ...args]
     },
   }),
+  new Executor('Fish Shell', {
+    extensions: ['fish'],
+
+    checkInstallation: ['fish', '--version'],
+    installMessage:
+      'Please install Fish from https://fishshell.com',
+
+    run(args) {
+      return ['fish', ...args]
+    },
+  }),
 
   new Executor('Lua', {
     extensions: ['lua'],

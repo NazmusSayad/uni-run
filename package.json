@@ -1,6 +1,6 @@
 {
   "name": "uni-run",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "Universal Runner for many language",
   "scripts": {
     "dev": "npmize dev",
