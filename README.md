@@ -116,7 +116,3 @@ uniRun.addBin(executor)
 // Start the application with arguments
 uniRun.start(['arg1.some'])
 ```
-
-## License
-
-This project is licensed under the MIT License.
