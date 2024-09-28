@@ -1,14 +1,19 @@
+import getConfig from '../helpers/get-config'
 import Executor from './Executor'
 
+const config = getConfig()
+const JAVASCRIPT_RUNTIME = config['javascript-runtime'] ?? 'node'
+const TYPESCRIPT_RUNTIME = config['typescript-runtime'] ?? 'tsx'
+
 export default [
-  new Executor('Node.js', {
+  new Executor('JavaScript', {
     extensions: ['js', 'javascript', 'jsx', 'cjs', 'cjsx', 'mjs', 'mjsx'],
 
-    checkInstallation: ['node', '--version'],
+    checkInstallation: [JAVASCRIPT_RUNTIME, '--version'],
     installMessage: 'Please install Node.js from https://nodejs.org',
 
     run(args) {
-      return ['node', ...args]
+      return [JAVASCRIPT_RUNTIME, ...args]
     },
   }),
 
@@ -17,17 +22,17 @@ export default [
     watchExtensions: ['js', 'javascript', 'jsx', 'cjs', 'cjsx', 'mjs', 'mjsx'],
 
     checkInstallation(options) {
-      return options.tsNode ? ['ts-node', '--version'] : ['tsx', '--version']
+      return [options.tsNode ? 'ts-node' : TYPESCRIPT_RUNTIME, '--version']
     },
     installCommands(options) {
-      return options.tsNode
-        ? ['npm install -g ts-node']
-        : ['npm install -g tsx']
+      return [
+        'npm install -g ' + options.tsNode ? 'ts-node' : TYPESCRIPT_RUNTIME,
+      ]
     },
     installMessage: 'Please install tsx. More: https://tsx.is',
 
     run(args, options) {
-      return options.tsNode ? ['ts-node', ...args] : ['tsx', ...args]
+      return [options.tsNode ? 'ts-node' : TYPESCRIPT_RUNTIME, ...args]
     },
   }),
 
@@ -91,8 +96,7 @@ export default [
     extensions: ['fish'],
 
     checkInstallation: ['fish', '--version'],
-    installMessage:
-      'Please install Fish from https://fishshell.com',
+    installMessage: 'Please install Fish from https://fishshell.com',
 
     run(args) {
       return ['fish', ...args]

@@ -1,7 +1,7 @@
 import * as path from 'path'
 import gitignore from './gitignore'
 import * as chokidar from 'chokidar'
-import { createDebounce } from '../utils/debounce'
+import { createDebounce } from '../helpers/debounce'
 
 export type WatcherOptions = {
   ignore: string[]
