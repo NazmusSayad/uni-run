@@ -5,6 +5,7 @@ import { mapFlagsToOptions } from './argHelper'
 import scriptExecutors from './scriptExecutors'
 import checkRuntime from './scriptExecutors/checkRuntime'
 import getUserExecutors from './helpers/getUserExecutors'
+import colors from './lib/colors'
 
 arg.app.on(async ([script, listArs, trailingArgs], flags) => {
   const userExecutors = getUserExecutors(flags.cwd)
@@ -19,7 +20,7 @@ arg.app.on(async ([script, listArs, trailingArgs], flags) => {
   )
 
   if (!scriptExecutor) {
-    console.log('Unsupported script:', script)
+    console.error('Unsupported script:', script)
     return console.log('You may try "run exec YOUR_BIN script.ext -- --flags"')
   }
 
@@ -50,12 +51,11 @@ arg.list.on(() => {
     ...scriptExecutors,
   ]
 
-  console.log('Supported scripts:')
-  totalExecutors
-    .sort((a, b) => {
-      if (a.name < b.name) return -1
-      if (a.name > b.name) return 1
-      return 0
-    })
-    .forEach(({ name }) => console.log(`- ${name}`))
+  console.log(colors.bold('Supported scripts:'))
+  totalExecutors.forEach(({ name, exts }) => {
+    console.log(
+      `- ${colors.magenta(name)}`,
+      `[${exts.map((e) => '.' + colors.green(e)).join(', ')}]`
+    )
+  })
 })
