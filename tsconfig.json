@@ -3,7 +3,6 @@
     "outDir": "./dist",
     "module": "CommonJS",
     "target": "ES6",
-    "moduleResolution": "node",
     "esModuleInterop": true,
     "skipLibCheck": true,
     "declaration": true,

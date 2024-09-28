@@ -1,6 +1,5 @@
 import NoArg from 'noarg'
 import type { app } from './arg'
-import Executor from './builtin-bin/Executor'
 
 export const executionConfig = NoArg.defineConfig({
   flags: {
@@ -97,10 +96,7 @@ export const executionConfig = NoArg.defineConfig({
 })
 
 export type ExecuteOptions = ReturnType<typeof mapFlagsToOptions>
-export function mapFlagsToOptions(
-  flags: NoArg.InferFlags<typeof app>,
-  bin?: Executor
-) {
+export function mapFlagsToOptions(flags: NoArg.InferFlags<typeof app>) {
   return {
     cwd: flags.cwd,
     shell: flags.shell,
@@ -117,8 +113,7 @@ export function mapFlagsToOptions(
     watchDelay: flags.delay,
     watchFocus: flags.focus.length ? flags.focus : [flags.cwd],
     watchIgnore: flags.ignore,
-    watchExtensions:
-      (flags.ext.length ? flags.ext : bin?.getRelatedExts()) || [],
+    watchExtensions: flags.ext,
 
     tsNode: flags['tsn'],
     env: {

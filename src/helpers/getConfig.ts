@@ -1,17 +1,13 @@
-import fs from 'node:fs'
-import path from 'node:path'
+import fs from 'fs'
+import path from 'path'
+import { getExistedFile, getUserPath } from './utils'
 
-function getExistedFile(...files: string[]) {
-  for (const file of files) {
-    if (fs.existsSync(file)) return file
-  }
-}
-
-export default function () {
-  const userPath = process.env.HOME ?? process.env.USERPROFILE
+export default function (...extraDirs: string[]) {
+  const userPath = getUserPath()
   if (!userPath) return
 
   const configFile = getExistedFile(
+    ...extraDirs.map((dir) => path.join(dir, '/.uni-run.json')),
     path.join(process.cwd(), '/.uni-run.json'),
     path.join(userPath, '/.uni-run.json')
   )

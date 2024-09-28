@@ -1,13 +1,11 @@
 import './app'
 import { app } from './arg'
-import builtinBin from './builtin-bin'
-import Executor from './builtin-bin/Executor'
-
-export { Executor }
+import scriptExecutors from './scriptExecutors'
+import { ScriptExecutorOptions } from './scriptExecutors/types.t'
 
 export default {
-  addBin(bin: Executor) {
-    builtinBin.push(bin)
+  addExecutor(executor: ScriptExecutorOptions) {
+    scriptExecutors.unshift(executor)
   },
 
   start(args?: string[]) {

@@ -1,5 +1,5 @@
 import NoArg from 'noarg'
-import { executionConfig } from './arg-helper'
+import { executionConfig } from './argHelper'
 
 export const app = NoArg.create('uni-run', {
   ...executionConfig,

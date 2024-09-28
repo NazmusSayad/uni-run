@@ -4,7 +4,7 @@ import { ChildProcess } from 'child_process'
 import watcher from './watcher'
 import colors from '../lib/colors'
 import killProcess from './kill-process'
-import { ExecuteOptions } from '../arg-helper'
+import { ExecuteOptions } from '../argHelper'
 
 export default class Execution {
   private child: ChildProcess | null = null
