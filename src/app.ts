@@ -79,7 +79,7 @@ arg.list.on(() => {
 })
 
 arg.clean.on(() => {
-  console.log(colors.bgGreen('CACHE:'), colors.dim(getCacheDir()))
+  console.log(colors.bgGreen('CACHE:'), getCacheDir())
   cleanCacheDir()
   console.log(colors.green('Cache directory cleaned.'))
 })
