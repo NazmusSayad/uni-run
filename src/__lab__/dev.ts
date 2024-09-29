@@ -24,4 +24,7 @@ import { app } from '../arg'
 // app.start(['./scripts/main.js'])
 // app.start(['./scripts/index.js'])
 // app.start(['./scripts/super.go'])
-app.start(['./scripts/hello.cs'])
+// app.start(['./scripts/hello.c'])
+// app.start(['./scripts/hello.cs'])
+// app.start(['./scripts/hello.cpp'])
+app.start(['./scripts/hello.rs'])

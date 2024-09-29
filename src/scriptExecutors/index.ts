@@ -238,10 +238,25 @@ export default as<ScriptExecutorOptions[]>([
     getRuntime([script, ...args], options, config) {
       return {
         compile: ['mcs', script, '-out:dist/output.exe'],
-        exec: ['./dist/output'],
+        exec: ['./dist/output', ...args],
         install: {
           check: ['mcs', '--version'],
           hints: ['Please install Mono from https://www.mono-project.com'],
+        },
+      }
+    },
+  },
+
+  {
+    name: 'Rust - rustc',
+    exts: ['rs'],
+    getRuntime([script, ...args], options, config) {
+      return {
+        compile: ['rustc', script, '-o', 'dist/output'],
+        exec: ['./dist/output', ...args],
+        install: {
+          check: ['rustc', '--version'],
+          hints: ['Please install Rust from https://www.rust-lang.org'],
         },
       }
     },

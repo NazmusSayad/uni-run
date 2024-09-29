@@ -2,6 +2,6 @@ using System;
 
 class Program {
     static void Main() {
-        Console.WriteLine("Hello, World! from CSharp");
+        Console.WriteLine("Hello, World!");
     }
 }
