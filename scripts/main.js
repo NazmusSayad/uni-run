@@ -1,7 +1,6 @@
-const fs = require('fs')
-
 let i = 0
-setInterval(() => {
-  console.log(i)
-  fs.appendFileSync('scripts/log.txt', `Hello, ${i++}\n`)
-}, 500)
+let num = setInterval(() => {
+  console.log('Hello World', i++)
+
+  if (i === 5) clearInterval(num)
+}, 100)

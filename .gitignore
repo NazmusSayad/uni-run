@@ -1,4 +1,5 @@
 # npmize
 dist
+.cache
 .npmize
 node_modules

@@ -1,4 +1,6 @@
 import as from '../helpers/as'
+import { getUniqueCacheDir } from './helpers'
+import { emptyDir } from '../helpers/utils'
 import { ScriptExecutorOptions } from './types.t'
 
 export default as<ScriptExecutorOptions[]>([
@@ -25,7 +27,6 @@ export default as<ScriptExecutorOptions[]>([
 
       return {
         exec: [runtime, ...args],
-        compile: ['echo', 'hello'],
         install: {
           check: [runtime, '--version'],
           hints: installHints,
@@ -195,7 +196,7 @@ export default as<ScriptExecutorOptions[]>([
       return {
         exec: ['go', 'run', ...args],
         install: {
-          check: ['go', '-v'],
+          check: ['go', 'version'],
           hints: ['Please install Ruby from https://www.ruby-lang.org'],
         },
       }
@@ -206,9 +207,11 @@ export default as<ScriptExecutorOptions[]>([
     name: 'C - GCC',
     exts: ['c'],
     getRuntime([script, ...args], options, config) {
+      const output = emptyDir('/c-gcc') + '/output'
+
       return {
-        compile: ['gcc', script, '-o', 'dist/output'],
-        exec: ['./dist/output', ...args],
+        compile: ['gcc', script, '-o', output],
+        exec: [output, ...args],
         install: {
           check: ['gcc', '--version'],
           hints: ['Please install GCC from https://gcc.gnu.org'],
@@ -221,9 +224,11 @@ export default as<ScriptExecutorOptions[]>([
     name: 'C++ - GCC',
     exts: ['cpp'],
     getRuntime([script, ...args], options, config) {
+      const output = getUniqueCacheDir('/cpp-gcc') + '/output'
+
       return {
-        compile: ['g++', script, '-o', 'dist/output'],
-        exec: ['./dist/output', ...args],
+        compile: ['g++', script, '-o', output],
+        exec: [output, ...args],
         install: {
           check: ['g++', '--version'],
           hints: ['Please install GCC from https://gcc.gnu.org'],
@@ -233,12 +238,14 @@ export default as<ScriptExecutorOptions[]>([
   },
 
   {
-    name: 'C# - Mono',
+    name: 'C# - Mono (Windows)',
     exts: ['cs'],
     getRuntime([script, ...args], options, config) {
+      const output = getUniqueCacheDir('/cs-mono') + '/output.exe'
+
       return {
-        compile: ['mcs', script, '-out:dist/output.exe'],
-        exec: ['./dist/output', ...args],
+        compile: ['mcs', '-out:' + output, script],
+        exec: [output, ...args],
         install: {
           check: ['mcs', '--version'],
           hints: ['Please install Mono from https://www.mono-project.com'],
@@ -251,9 +258,11 @@ export default as<ScriptExecutorOptions[]>([
     name: 'Rust - rustc',
     exts: ['rs'],
     getRuntime([script, ...args], options, config) {
+      const output = getUniqueCacheDir('/rust') + '/output'
+
       return {
-        compile: ['rustc', script, '-o', 'dist/output'],
-        exec: ['./dist/output', ...args],
+        compile: ['rustc', script, '-o', output],
+        exec: [output, ...args],
         install: {
           check: ['rustc', '--version'],
           hints: ['Please install Rust from https://www.rust-lang.org'],
@@ -282,13 +291,13 @@ export default as<ScriptExecutorOptions[]>([
     exts: ['html', 'htm'],
     getRuntime([script, ...args], options, config) {
       return {
-        exec: ['lite-server', script, ...args],
+        exec: ['light-express-server', script, ...args],
         watchExts: ['css', 'js', 'javascript'],
         install: {
-          check: ['lite-server', '--version'],
-          command: ['npm', 'install', '-g', 'lite-server'],
+          check: ['light-express-server', '--version'],
+          command: ['npm', 'install', '-g', 'light-express-server'],
           hints: [
-            'Please install lite-server from https://www.npmjs.com/package/lite-server',
+            'Please install light-express-server from https://www.npmjs.com/package/light-express-server',
           ],
         },
       }

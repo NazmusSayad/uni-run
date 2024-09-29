@@ -19,3 +19,7 @@ export const exec = app.create('exec', {
 export const list = app.create('list', {
   description: 'List supported scripts',
 })
+
+export const clean = app.create('clean', {
+  description: 'Clean cache directory',
+})
