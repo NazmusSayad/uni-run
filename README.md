@@ -83,15 +83,16 @@ Now you can run your script with `run script.js` or `run script.ts` with your ow
 ## Setup Custom Executors
 
 Create `.uni-run.cjs` file in your user home directory or current working directory.
+NOTE: Your custom executors will have more priority than the default executors.
 
 ```js
 module.exports = [
   {
-    name: 'Something',
+    name: 'Name',
     exts: ['ext'],
     getRuntime(args, options, config) {
       return {
-        run: ['YOUR_BIN', ...args],
+        start: ['YOUR_BIN', ...args],
       }
     },
   },
@@ -104,16 +105,20 @@ Now you can run your script with `run script.ext`.
 
 The `uni-run` package provides a simple API to manage and execute scripts.
 
-#### `addExecutor(options: ExecutorOptions)`:
+#### `addExecutorBefore(options: ExecutorOptions)` or `addExecutorAfter(options: ExecutorOptions)`:
+
+Both methods add an executor to the list of executors. The `addExecutorBefore` method adds the executor before the default executors, while the `addExecutorAfter` method adds the executor after the default executors. This means that the executor will be used before or after checking the default executors.
 
 ```typescript
 import uniRun from 'uni-run'
 
-uniRun.addExecutor({
+uniRun.addExecutorBefore({
   name: 'Name',
-  exts: ['something'],
+  exts: ['ext'],
   getRuntime(args, options, config) {
-    return ['something-binary', ...args]
+    return {
+      start: ['YOUR_BIN', ...args],
+    }
   },
 })
 ```
@@ -134,11 +139,13 @@ uniRun.start(['arg1', 'arg2'])
 import uniRun from 'uni-run'
 
 // Add the Executor to uni-run
-uniRun.addExecutor({
+uniRun.addExecutorBefore({
   name: 'Name',
-  exts: ['something'],
+  exts: ['ext'],
   getRuntime(args, options, config) {
-    return ['something-binary', ...args]
+    return {
+      start: ['YOUR_BIN', ...args],
+    }
   },
 })
 

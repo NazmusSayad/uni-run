@@ -6,11 +6,13 @@ export type ExecutorConfig = Partial<{
 }>
 
 export type RuntimeOptions = {
-  run: string[]
-  install?: string[]
-  installHints?: string[]
-  isInstalled?: string[]
+  start: string[]
   watchExts?: string[]
+  install?: {
+    check?: string[]
+    hints?: string[]
+    command?: string[]
+  }
 }
 
 export type ScriptExecutorOptions = {

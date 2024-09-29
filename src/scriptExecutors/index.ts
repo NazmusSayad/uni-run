@@ -24,9 +24,11 @@ export default as<ScriptExecutorOptions[]>([
       }
 
       return {
-        run: [runtime, ...args],
-        isInstalled: [runtime, '--version'],
-        installHints,
+        start: [runtime, ...args],
+        install: {
+          check: [runtime, '--version'],
+          hints: installHints,
+        },
       }
     },
   },
@@ -61,10 +63,12 @@ export default as<ScriptExecutorOptions[]>([
       }
 
       return {
-        run: [runtime, ...args],
-        isInstalled: [runtime, '--version'],
-        installHints,
+        start: [runtime, ...args],
         watchExts: ['js', 'javascript', 'jsx', 'cjs', 'cjsx', 'mjs', 'mjsx'],
+        install: {
+          check: [runtime, '--version'],
+          hints: installHints,
+        },
       }
     },
   },
@@ -74,9 +78,11 @@ export default as<ScriptExecutorOptions[]>([
     exts: ['py'],
     getRuntime(args, options, config) {
       return {
-        run: ['python', ...args],
-        isInstalled: ['python', '--version'],
-        installHints: ['Please install Python from https://www.python.org'],
+        start: ['python', ...args],
+        install: {
+          check: ['python', '--version'],
+          hints: ['Please install Python from https://www.python.org'],
+        },
       }
     },
   },
@@ -86,9 +92,11 @@ export default as<ScriptExecutorOptions[]>([
     exts: ['java'],
     getRuntime(args, options, config) {
       return {
-        run: ['java', ...args],
-        isInstalled: ['java', '--version'],
-        installHints: ['Please install Java from https://www.oracle.com/java'],
+        start: ['java', ...args],
+        install: {
+          check: ['java', '--version'],
+          hints: ['Please install Java from https://www.oracle.com/java'],
+        },
       }
     },
   },
@@ -98,11 +106,13 @@ export default as<ScriptExecutorOptions[]>([
     exts: ['ps1'],
     getRuntime(args, options, config) {
       return {
-        run: ['powershell', '-File', ...args],
-        isInstalled: ['powershell', '-command', 'echo ok'],
-        installHints: [
-          'Please install Powershell from https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell',
-        ],
+        start: ['powershell', '-File', ...args],
+        install: {
+          check: ['powershell', '-command', 'echo ok'],
+          hints: [
+            'Please install Powershell from https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell',
+          ],
+        },
       }
     },
   },
@@ -112,9 +122,11 @@ export default as<ScriptExecutorOptions[]>([
     exts: ['cmd', 'bat'],
     getRuntime(args, options, config) {
       return {
-        run: ['cmd', '/c', ...args],
-        isInstalled: ['cmd', '/c', 'echo ok'],
-        installHints: ['Please install Command Prompt from Windows'],
+        start: ['cmd', '/c', ...args],
+        install: {
+          check: ['cmd', '/c', 'echo ok'],
+          hints: ['Please install Command Prompt from Windows'],
+        },
       }
     },
   },
@@ -124,11 +136,11 @@ export default as<ScriptExecutorOptions[]>([
     exts: ['sh'],
     getRuntime(args, options, config) {
       return {
-        run: ['bash', ...args],
-        isInstalled: ['bash', '--version'],
-        installHints: [
-          'Please install Bash from https://www.gnu.org/software/bash',
-        ],
+        start: ['bash', ...args],
+        install: {
+          check: ['bash', '--version'],
+          hints: ['Please install Bash from https://www.gnu.org/software/bash'],
+        },
       }
     },
   },
@@ -138,9 +150,11 @@ export default as<ScriptExecutorOptions[]>([
     exts: ['fish'],
     getRuntime(args, options, config) {
       return {
-        run: ['fish', ...args],
-        isInstalled: ['fish', '--version'],
-        installHints: ['Please install Fish from https://fishshell.com'],
+        start: ['fish', ...args],
+        install: {
+          check: ['fish', '--version'],
+          hints: ['Please install Fish from https://fishshell.com'],
+        },
       }
     },
   },
@@ -150,9 +164,39 @@ export default as<ScriptExecutorOptions[]>([
     exts: ['lua'],
     getRuntime(args, options, config) {
       return {
-        run: ['lua', ...args],
-        isInstalled: ['lua', '-v'],
-        installHints: ['Please install Lua from https://www.lua.org'],
+        start: ['lua', ...args],
+        install: {
+          check: ['lua', '-v'],
+          hints: ['Please install Lua from https://www.lua.org'],
+        },
+      }
+    },
+  },
+
+  {
+    name: 'Ruby',
+    exts: ['rb'],
+    getRuntime(args, options, config) {
+      return {
+        start: ['ruby', ...args],
+        install: {
+          check: ['ruby', '-v'],
+          hints: ['Please install Ruby from https://www.ruby-lang.org'],
+        },
+      }
+    },
+  },
+
+  {
+    name: 'Go',
+    exts: ['go'],
+    getRuntime(args, options, config) {
+      return {
+        start: ['go', 'run', ...args],
+        install: {
+          check: ['go', '-v'],
+          hints: ['Please install Ruby from https://www.ruby-lang.org'],
+        },
       }
     },
   },
@@ -162,9 +206,11 @@ export default as<ScriptExecutorOptions[]>([
     exts: ['sass', 'scss'],
     getRuntime(args, options, config) {
       return {
-        run: ['sass', ...args],
-        isInstalled: ['sass', '--version'],
-        installHints: ['Please install SASS from https://sass-lang.com'],
+        start: ['sass', ...args],
+        install: {
+          check: ['sass', '--version'],
+          hints: ['Please install SASS from https://sass-lang.com'],
+        },
       }
     },
   },
@@ -174,13 +220,14 @@ export default as<ScriptExecutorOptions[]>([
     exts: ['html', 'htm'],
     getRuntime(args, options, config) {
       return {
-        run: ['http-server', ...args],
-        isInstalled: ['http-server', '--version'],
-        installHints: [
-          'Please install http-server from https://www.npmjs.com/package/http-server',
-        ],
-
+        start: ['http-server', ...args],
         watchExts: ['css', 'js', 'javascript', 'json'],
+        install: {
+          check: ['http-server', '--version'],
+          hints: [
+            'Please install http-server from https://www.npmjs.com/package/http-server',
+          ],
+        },
       }
     },
   },

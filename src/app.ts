@@ -32,7 +32,7 @@ arg.app.on(async ([script, listArs, trailingArgs], flags) => {
   )
 
   checkRuntime(runtime)
-  Execution.start(runtime.run, {
+  Execution.start(runtime.start, {
     ...executionOptions,
     watchExtensions: executionOptions.watchExtensions.length
       ? executionOptions.watchExtensions

@@ -4,8 +4,12 @@ import scriptExecutors from './scriptExecutors'
 import { ScriptExecutorOptions } from './scriptExecutors/types.t'
 
 export default {
-  addExecutor(executor: ScriptExecutorOptions) {
+  addExecutorBefore(executor: ScriptExecutorOptions) {
     scriptExecutors.unshift(executor)
+  },
+
+  addExecutorAfter(executor: ScriptExecutorOptions) {
+    scriptExecutors.push(executor)
   },
 
   start(args?: string[]) {
