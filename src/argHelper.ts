@@ -3,38 +3,42 @@ import type { app } from './arg'
 
 export const executionConfig = NoArg.defineConfig({
   flags: {
-    // Watch/Reload flags
-    'key-reload': NoArg.boolean()
-      .aliases('k')
-      .default(true)
-      .description("Reload the page when pressing 'Ctrl+R' or 'F5'"),
-    watch: NoArg.boolean()
-      .aliases('w')
-      .default(true)
+    'do-not-watch': NoArg.boolean()
+      .aliases('dw')
       .description('Watch for file changes and reload the script'),
-    exit: NoArg.boolean()
-      .default(false)
+    'disable-reload-key': NoArg.boolean()
+      .aliases('dk')
+      .description("Disable 'Ctrl+R' or 'F5' to reload the script"),
+    'disable-raw-stdin': NoArg.boolean()
+      .aliases('drs')
       .description(
-        'Exit after code execution, disabling `watch` and `reloadKey`'
+        'Disable raw mode for stdin. Do not needed with `--disable-reload-key`'
       ),
+
+    exit: NoArg.boolean()
+      .aliases('x')
+      .description('Exit the script after the first execution'),
+    quiet: NoArg.boolean()
+      .aliases('q')
+      .description('Do not show any output of the script'),
+    keep: NoArg.boolean()
+      .aliases('k')
+      .description('Do not clear the console while starting the script'),
+
+    ext: NoArg.array(NoArg.string())
+      .aliases('e')
+      .description('Looks for changes only of the given extensions'),
+    focus: NoArg.array(NoArg.string())
+      .aliases('f')
+      .description('Only watch the given items. `chokidar` syntax'),
+    ignore: NoArg.array(NoArg.string())
+      .aliases('ig')
+      .description('Exclude the given items. `gitignore` syntax'),
     delay: NoArg.number()
       .aliases('d')
       .default(100)
       .description('The delay to wait for the watcher to trigger'),
-    ext: NoArg.array(NoArg.string())
-      .aliases('e')
-      .default([])
-      .description('Looks for changes only of the given extensions'),
-    focus: NoArg.array(NoArg.string())
-      .aliases('f')
-      .default([])
-      .description('Only watch the given items. `chokidar` syntax'),
-    ignore: NoArg.array(NoArg.string())
-      .aliases('ig')
-      .default([])
-      .description('Exclude the given items. `gitignore` syntax'),
 
-    // Benchmark flags
     bench: NoArg.boolean()
       .aliases('b')
       .description('Calculate the execution time'),
@@ -43,43 +47,19 @@ export const executionConfig = NoArg.defineConfig({
       .minLength(1)
       .description('The prefix to show before the execution time'),
 
-    clear: NoArg.boolean()
-      .aliases('c')
-      .default(true)
-      .description('Clear the console before running the script'),
-    silent: NoArg.boolean()
-      .default(false)
-      .description('Do not show any output of the script'),
+    shell: NoArg.boolean()
+      .aliases('sh')
+      .description('Run the script in a shell for more low-level control.'),
     cwd: NoArg.string()
       .default(process.cwd())
-      .description('Current working directory'),
-    shell: NoArg.boolean()
-      .default(false)
-      .description('Run the script in a shell for more low-level control'),
-    'safe-stdin': NoArg.boolean()
-      .default(false)
-      .description('Disable raw mode for stdin (useful for some scripts)'),
+      .description('Set the current working directory'),
 
-    info: NoArg.boolean()
-      .default(false)
-      .description('Show information about the script'),
-    time: NoArg.boolean()
-      .default(false)
-      .description('Show the execution time at the start'),
-
-    env: NoArg.array(NoArg.string())
-      .default([])
-      .description('Environment variables'),
-
-    // Extra flags
-
-    'node-dev': NoArg.boolean()
-      .default(false)
-      .description('Set NODE_ENV to "development"'),
-
-    tsn: NoArg.boolean()
-      .default(false)
-      .description('Run the script with ts-node (TypeScript)'),
+    info: NoArg.boolean().description('Show information about the script'),
+    time: NoArg.boolean().description('Show the execution time at the start'),
+    env: NoArg.array(NoArg.string()).description('Set environment variables'),
+    'node-dev': NoArg.boolean().description(
+      'Set env.NODE_ENV to "development"'
+    ),
   },
 
   listArgument: {
@@ -89,7 +69,6 @@ export const executionConfig = NoArg.defineConfig({
   },
 
   trailingArguments: '--',
-
   customRenderHelp: {
     helpUsageTrailingArgsLabel: '...[args/flags for script]',
   },
@@ -97,27 +76,32 @@ export const executionConfig = NoArg.defineConfig({
 
 export type ExecuteOptions = ReturnType<typeof mapFlagsToOptions>
 export function mapFlagsToOptions(flags: NoArg.InferFlags<typeof app>) {
+  if (flags.exit) {
+    flags['disable-reload-key'] = true
+    flags['do-not-watch'] = true
+  }
+
   return {
     cwd: flags.cwd,
-    shell: flags.shell,
-    silent: flags.silent,
-    stdinSafeMode: flags['safe-stdin'],
-    showInfo: flags.info,
-    showTime: flags.time,
-    benchmark: flags.bench ?? Boolean(flags['bench-prefix']),
+    shell: !!flags.shell,
+    silent: !!flags.quiet,
+    showInfo: !!flags.info,
+    showTime: !!flags.time,
+    benchmark: !!(flags.bench ?? flags['bench-prefix']),
     benchmarkPrefix: flags['bench-prefix'],
 
-    clearOnReload: flags.clear,
-    keystrokeReload: flags.exit ? false : flags['key-reload'],
-    watch: flags.exit ? false : flags.watch,
-    watchDelay: flags.delay,
-    watchFocus: flags.focus.length ? flags.focus : [flags.cwd],
-    watchIgnore: flags.ignore,
-    watchExtensions: flags.ext,
+    clearOnReload: !flags.keep,
+    keystrokeReload: !flags['disable-reload-key'],
+    stdinSafeMode: !!flags['disable-raw-stdin'],
 
-    tsNode: flags['tsn'],
+    watch: !flags['do-not-watch'],
+    watchDelay: flags.delay,
+    watchFocus: flags.focus?.length ? flags.focus : [flags.cwd],
+    watchIgnore: flags.ignore ?? [],
+    watchExtensions: flags.ext ?? [],
+
     env: {
-      ...flags.env.reduce((acc: any, env) => {
+      ...(flags.env ?? []).reduce((acc: any, env) => {
         const [key, value] = env.split('=')
         acc[key] = value
         return acc

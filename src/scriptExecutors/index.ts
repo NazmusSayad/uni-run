@@ -1,6 +1,5 @@
 import as from '../helpers/as'
 import { getUniqueCacheDir } from './helpers'
-import { emptyDir } from '../helpers/utils'
 import { ScriptExecutorOptions } from './types.t'
 
 export default as<ScriptExecutorOptions[]>([
@@ -40,9 +39,7 @@ export default as<ScriptExecutorOptions[]>([
     exts: ['ts', 'tsx', 'cts', 'ctsx', 'mts', 'mtsx'],
     getRuntime(args, options, config) {
       let installHints: undefined | string[]
-      const runtime = options.tsNode
-        ? 'ts-node'
-        : config['typescript-runtime'] || 'tsx'
+      const runtime = config['typescript-runtime'] || 'tsx'
 
       switch (runtime) {
         case 'tsx':
@@ -207,7 +204,7 @@ export default as<ScriptExecutorOptions[]>([
     name: 'C - GCC',
     exts: ['c'],
     getRuntime([script, ...args], options, config) {
-      const output = emptyDir('/c-gcc') + '/output'
+      const output = getUniqueCacheDir('/c-gcc') + '/output'
 
       return {
         compile: ['gcc', script, '-o', output],
@@ -258,7 +255,7 @@ export default as<ScriptExecutorOptions[]>([
     name: 'Rust - rustc',
     exts: ['rs'],
     getRuntime([script, ...args], options, config) {
-      const output = getUniqueCacheDir('/rust') + '/output'
+      const output = getUniqueCacheDir('/rust-rustc') + '/output'
 
       return {
         compile: ['rustc', script, '-o', output],

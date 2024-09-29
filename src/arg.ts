@@ -3,7 +3,6 @@ import { executionConfig } from './argHelper'
 
 export const app = NoArg.create('uni-run', {
   ...executionConfig,
-
   description: 'A universal runner for scripts',
   system: { splitListByComma: true },
   arguments: [

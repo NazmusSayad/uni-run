@@ -6,15 +6,10 @@ import { mapFlagsToOptions } from './argHelper'
 import scriptExecutors from './scriptExecutors'
 import checkRuntime from './scriptExecutors/checkRuntime'
 import getUserExecutors from './helpers/getUserExecutors'
+import { ScriptExecutorOptions } from './scriptExecutors/types.t'
 import { cleanCacheDir, getCacheDir } from './scriptExecutors/helpers'
 
 arg.app.on(async ([script, listArs, trailingArgs], flags) => {
-  if (process.env.NODE_ENV_UNI_RUN === 'LAB') {
-    flags.clear = false
-    flags['safe-stdin'] = true
-    flags['key-reload'] = false
-  }
-
   const executionConfig = getConfig(flags.cwd)
   const userExecutors = getUserExecutors(flags.cwd)
 
@@ -63,19 +58,21 @@ arg.exec.on(([listArs, trailingArgs], flags) => {
 })
 
 arg.list.on(() => {
-  const userExecutors = getUserExecutors()
-  const totalExecutors = [
-    ...(Array.isArray(userExecutors) ? userExecutors : []),
-    ...scriptExecutors,
-  ]
+  function printExecutorsFactory(
+    clrFn: Function,
+    executors: ScriptExecutorOptions[]
+  ) {
+    executors.forEach(({ name, exts }) => {
+      console.log(
+        `- ${clrFn(name)}`,
+        `[${exts.map((e) => '.' + colors.green(e)).join(', ')}]`
+      )
+    })
+  }
 
   console.log(colors.bold('Supported scripts:'))
-  totalExecutors.forEach(({ name, exts }) => {
-    console.log(
-      `- ${colors.blue(name)}`,
-      `[${exts.map((e) => '.' + colors.green(e)).join(', ')}]`
-    )
-  })
+  printExecutorsFactory(colors.cyan, getUserExecutors() ?? [])
+  printExecutorsFactory(colors.blue, scriptExecutors)
 })
 
 arg.clean.on(() => {

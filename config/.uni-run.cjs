@@ -1,10 +1,10 @@
 module.exports = [
   {
-    name: 'Something',
+    name: 'deno',
     exts: ['js'],
     getRuntime() {
       return {
-        run: ['echo', 'Hello World!'],
+        exec: ['echo', 'Hello World! test!!!!!'],
       }
     },
   },
