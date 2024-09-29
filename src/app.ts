@@ -54,7 +54,7 @@ arg.list.on(() => {
   console.log(colors.bold('Supported scripts:'))
   totalExecutors.forEach(({ name, exts }) => {
     console.log(
-      `- ${colors.magenta(name)}`,
+      `- ${colors.blue(name)}`,
       `[${exts.map((e) => '.' + colors.green(e)).join(', ')}]`
     )
   })
