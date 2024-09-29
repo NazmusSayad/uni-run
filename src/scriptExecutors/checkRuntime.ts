@@ -3,23 +3,32 @@ import confirm from '@inquirer/confirm'
 import { RuntimeOptions } from './types.t'
 import { sync as spawnSync } from 'cross-spawn'
 
-export default function (runtime: RuntimeOptions) {
-  if (!runtime.install?.check?.length) return
-  const [command, ...args] = runtime.install.check
-  const result = spawnSync(command, args, { stdio: 'ignore' })
-  if (result.status === 0) return
+export default async function (runtime: RuntimeOptions): Promise<boolean> {
+  const install = runtime.install
+  if (!install) return true
 
-  if (runtime.install.hints?.length) {
-    console.error(`${runtime.start[0]} is not installed.`)
+  if (!install.check?.length) return true
+  const [checkCmd, ...checkArgs] = install.check
+
+  const result = spawnSync(checkCmd, checkArgs, { stdio: 'ignore' })
+  if (result.status === 0) return true
+
+  console.error(
+    colors.yellow(runtime.exec[0]) + colors.red(' is not installed.')
+  )
+
+  if (!install.command?.length) return false
+  const ans = await confirm({ message: 'Do you want to install it?' })
+  if (ans) {
+    const [installCmd, ...installArgs] = install.command
+    const result = spawnSync(installCmd, installArgs, { stdio: 'inherit' })
+    return result.status === 0
+  }
+
+  if (install.hints?.length) {
     console.log(colors.bold('How to install:'))
-    runtime.install.hints.forEach((hint) => console.log(hint))
+    install.hints.forEach((hint) => console.log(hint))
   }
 
-  if (runtime.install.command?.length) {
-    confirm({ message: 'Do you want to install it?' }).then((ans) => {
-      if (!ans) return
-      const [command, ...args] = runtime.install?.command!
-      spawnSync(command, args, { stdio: 'inherit' })
-    })
-  }
+  return false
 }

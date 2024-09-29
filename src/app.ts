@@ -1,15 +1,16 @@
 import * as arg from './arg'
+import colors from './lib/colors'
 import Execution from './execution'
 import getConfig from './helpers/getConfig'
 import { mapFlagsToOptions } from './argHelper'
 import scriptExecutors from './scriptExecutors'
 import checkRuntime from './scriptExecutors/checkRuntime'
 import getUserExecutors from './helpers/getUserExecutors'
-import colors from './lib/colors'
 
 arg.app.on(async ([script, listArs, trailingArgs], flags) => {
-  const userExecutors = getUserExecutors(flags.cwd)
   const executionConfig = getConfig(flags.cwd)
+  const userExecutors = getUserExecutors(flags.cwd)
+
   const totalExecutors = [
     ...(Array.isArray(userExecutors) ? userExecutors : []),
     ...scriptExecutors,
@@ -20,8 +21,12 @@ arg.app.on(async ([script, listArs, trailingArgs], flags) => {
   )
 
   if (!scriptExecutor) {
-    console.error('Unsupported script:', script)
-    return console.log('You may try "run exec YOUR_BIN script.ext -- --flags"')
+    console.error(colors.red('Unsupported script:'), colors.yellow(script))
+    return console.log(
+      colors.bgGreen('TIPS:'),
+      'You may try',
+      colors.cyan(`run exec <YOUR_BIN> ${colors.yellow(script)}`)
+    )
   }
 
   const executionOptions = mapFlagsToOptions(flags)
@@ -31,17 +36,23 @@ arg.app.on(async ([script, listArs, trailingArgs], flags) => {
     executionConfig
   )
 
-  checkRuntime(runtime)
-  Execution.start(runtime.start, {
-    ...executionOptions,
-    watchExtensions: executionOptions.watchExtensions.length
-      ? executionOptions.watchExtensions
-      : [...scriptExecutor.exts, ...(runtime.watchExts ?? [])],
-  })
+  if (!(await checkRuntime(runtime))) return
+  const exec = new Execution(
+    {
+      ...executionOptions,
+      watchExtensions: executionOptions.watchExtensions.length
+        ? executionOptions.watchExtensions
+        : [...scriptExecutor.exts, ...(runtime.watchExts ?? [])],
+    },
+    runtime.exec,
+    runtime.compile
+  )
+
+  exec.start()
 })
 
 arg.exec.on(([listArs, trailingArgs], flags) => {
-  Execution.start([...listArs, ...trailingArgs], mapFlagsToOptions(flags))
+  new Execution(mapFlagsToOptions(flags), [...listArs, ...trailingArgs]).start()
 })
 
 arg.list.on(() => {

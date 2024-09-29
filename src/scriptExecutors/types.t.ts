@@ -6,10 +6,11 @@ export type ExecutorConfig = Partial<{
 }>
 
 export type RuntimeOptions = {
-  start: string[]
+  exec: string[]
+  compile?: string[]
   watchExts?: string[]
   install?: {
-    check?: string[]
+    check: string[]
     hints?: string[]
     command?: string[]
   }

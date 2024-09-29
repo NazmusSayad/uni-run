@@ -1,6 +1,6 @@
-import { spawn } from 'cross-spawn'
 import * as readline from 'readline'
 import { ChildProcess } from 'child_process'
+import { spawn, sync as spawnSync } from 'cross-spawn'
 import watcher from './watcher'
 import colors from '../lib/colors'
 import killProcess from './kill-process'
@@ -12,17 +12,38 @@ export default class Execution {
   private isBenchmarkRunning = false
   private isExecutionExecutedAnyTime = false
 
-  static start([command, ...args]: string[], options: ExecuteOptions) {
-    return new Execution(command, args, options)
-  }
-
   constructor(
-    private command: string,
-    private args: string[],
-    private options: ExecuteOptions
+    private options: ExecuteOptions,
+    private startArgs: string[],
+    private preStartArgs?: string[]
   ) {
     this.setup()
+  }
+
+  start() {
     this.startProcess()
+  }
+
+  private spawnSync(args: string[]) {
+    const [command, ...args_] = args
+    return spawnSync(command, args_, {
+      argv0: command,
+      cwd: this.options.cwd,
+      shell: this.options.shell,
+      env: { ...process.env, ...this.options.env },
+      stdio: this.options.silent ? 'ignore' : 'inherit',
+    })
+  }
+
+  private spawnAsync(args: string[]) {
+    const [command, ...args_] = args
+    return spawn(command, args_, {
+      argv0: command,
+      cwd: this.options.cwd,
+      shell: this.options.shell,
+      env: { ...process.env, ...this.options.env },
+      stdio: this.options.silent ? 'ignore' : 'inherit',
+    })
   }
 
   private setup() {
@@ -71,13 +92,9 @@ export default class Execution {
     this.renderInfoLogs()
 
     this.isExecutionExecutedAnyTime = true
-    this.child = spawn(this.command, this.args, {
-      argv0: this.command,
-      cwd: this.options.cwd,
-      shell: this.options.shell,
-      env: { ...process.env, ...this.options.env },
-      stdio: this.options.silent ? 'ignore' : 'inherit',
-    })
+
+    if (this.preStartArgs) this.spawnSync(this.preStartArgs)
+    this.child = this.spawnAsync(this.startArgs)
 
     this.child.on('exit', (code) => {
       if (code && code > 0) {

@@ -24,7 +24,8 @@ export default as<ScriptExecutorOptions[]>([
       }
 
       return {
-        start: [runtime, ...args],
+        exec: [runtime, ...args],
+        compile: ['echo', 'hello'],
         install: {
           check: [runtime, '--version'],
           hints: installHints,
@@ -63,7 +64,7 @@ export default as<ScriptExecutorOptions[]>([
       }
 
       return {
-        start: [runtime, ...args],
+        exec: [runtime, ...args],
         watchExts: ['js', 'javascript', 'jsx', 'cjs', 'cjsx', 'mjs', 'mjsx'],
         install: {
           check: [runtime, '--version'],
@@ -78,7 +79,7 @@ export default as<ScriptExecutorOptions[]>([
     exts: ['py'],
     getRuntime(args, options, config) {
       return {
-        start: ['python', ...args],
+        exec: ['python', ...args],
         install: {
           check: ['python', '--version'],
           hints: ['Please install Python from https://www.python.org'],
@@ -92,7 +93,7 @@ export default as<ScriptExecutorOptions[]>([
     exts: ['java'],
     getRuntime(args, options, config) {
       return {
-        start: ['java', ...args],
+        exec: ['java', ...args],
         install: {
           check: ['java', '--version'],
           hints: ['Please install Java from https://www.oracle.com/java'],
@@ -106,7 +107,7 @@ export default as<ScriptExecutorOptions[]>([
     exts: ['ps1'],
     getRuntime(args, options, config) {
       return {
-        start: ['powershell', '-File', ...args],
+        exec: ['powershell', '-File', ...args],
         install: {
           check: ['powershell', '-command', 'echo ok'],
           hints: [
@@ -122,7 +123,7 @@ export default as<ScriptExecutorOptions[]>([
     exts: ['cmd', 'bat'],
     getRuntime(args, options, config) {
       return {
-        start: ['cmd', '/c', ...args],
+        exec: ['cmd', '/c', ...args],
         install: {
           check: ['cmd', '/c', 'echo ok'],
           hints: ['Please install Command Prompt from Windows'],
@@ -136,7 +137,7 @@ export default as<ScriptExecutorOptions[]>([
     exts: ['sh'],
     getRuntime(args, options, config) {
       return {
-        start: ['bash', ...args],
+        exec: ['bash', ...args],
         install: {
           check: ['bash', '--version'],
           hints: ['Please install Bash from https://www.gnu.org/software/bash'],
@@ -150,7 +151,7 @@ export default as<ScriptExecutorOptions[]>([
     exts: ['fish'],
     getRuntime(args, options, config) {
       return {
-        start: ['fish', ...args],
+        exec: ['fish', ...args],
         install: {
           check: ['fish', '--version'],
           hints: ['Please install Fish from https://fishshell.com'],
@@ -164,7 +165,7 @@ export default as<ScriptExecutorOptions[]>([
     exts: ['lua'],
     getRuntime(args, options, config) {
       return {
-        start: ['lua', ...args],
+        exec: ['lua', ...args],
         install: {
           check: ['lua', '-v'],
           hints: ['Please install Lua from https://www.lua.org'],
@@ -178,7 +179,7 @@ export default as<ScriptExecutorOptions[]>([
     exts: ['rb'],
     getRuntime(args, options, config) {
       return {
-        start: ['ruby', ...args],
+        exec: ['ruby', ...args],
         install: {
           check: ['ruby', '-v'],
           hints: ['Please install Ruby from https://www.ruby-lang.org'],
@@ -192,10 +193,55 @@ export default as<ScriptExecutorOptions[]>([
     exts: ['go'],
     getRuntime(args, options, config) {
       return {
-        start: ['go', 'run', ...args],
+        exec: ['go', 'run', ...args],
         install: {
           check: ['go', '-v'],
           hints: ['Please install Ruby from https://www.ruby-lang.org'],
+        },
+      }
+    },
+  },
+
+  {
+    name: 'C - GCC',
+    exts: ['c'],
+    getRuntime([script, ...args], options, config) {
+      return {
+        compile: ['gcc', script, '-o', 'dist/output'],
+        exec: ['./dist/output', ...args],
+        install: {
+          check: ['gcc', '--version'],
+          hints: ['Please install GCC from https://gcc.gnu.org'],
+        },
+      }
+    },
+  },
+
+  {
+    name: 'C++ - GCC',
+    exts: ['cpp'],
+    getRuntime([script, ...args], options, config) {
+      return {
+        compile: ['g++', script, '-o', 'dist/output'],
+        exec: ['./dist/output', ...args],
+        install: {
+          check: ['g++', '--version'],
+          hints: ['Please install GCC from https://gcc.gnu.org'],
+        },
+      }
+    },
+  },
+
+  {
+    name: 'C# - Mono',
+    exts: ['cs'],
+    getRuntime([script, ...args], options, config) {
+      return {
+        compile: ['mcs', script, '-out:dist/output.exe'],
+        exec: ['./dist/output'],
+        install: {
+          check: ['mcs', '--version'],
+          hints: ['Please install Mono from https://www.mono-project.com'],
         },
       }
     },
@@ -206,9 +252,10 @@ export default as<ScriptExecutorOptions[]>([
     exts: ['sass', 'scss'],
     getRuntime(args, options, config) {
       return {
-        start: ['sass', ...args],
+        exec: ['sass', ...args],
         install: {
           check: ['sass', '--version'],
+          command: ['npm', 'install', '-g', 'sass'],
           hints: ['Please install SASS from https://sass-lang.com'],
         },
       }
@@ -218,14 +265,15 @@ export default as<ScriptExecutorOptions[]>([
   {
     name: 'HTML Server',
     exts: ['html', 'htm'],
-    getRuntime(args, options, config) {
+    getRuntime([script, ...args], options, config) {
       return {
-        start: ['http-server', ...args],
-        watchExts: ['css', 'js', 'javascript', 'json'],
+        exec: ['lite-server', script, ...args],
+        watchExts: ['css', 'js', 'javascript'],
         install: {
-          check: ['http-server', '--version'],
+          check: ['lite-server', '--version'],
+          command: ['npm', 'install', '-g', 'lite-server'],
           hints: [
-            'Please install http-server from https://www.npmjs.com/package/http-server',
+            'Please install lite-server from https://www.npmjs.com/package/lite-server',
           ],
         },
       }

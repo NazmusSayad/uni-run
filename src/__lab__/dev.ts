@@ -23,4 +23,5 @@ import { app } from '../arg'
 // app.start(['./scripts/main.ts', '--silent', '--bench-prefix', 'BENCHMARK'])
 // app.start(['./scripts/main.js'])
 // app.start(['./scripts/index.js'])
-app.start(['./scripts/super.go'])
+// app.start(['./scripts/super.go'])
+app.start(['./scripts/hello.cs'])

@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import { getExistedFile, getUserPath } from './utils'
 
-export default function (...extraDirs: string[]) {
+function inner(...extraDirs: string[]) {
   const userPath = getUserPath()
   if (!userPath) return
 
@@ -16,7 +16,9 @@ export default function (...extraDirs: string[]) {
   try {
     const config = fs.readFileSync(configFile, 'utf-8')
     return JSON.parse(config)
-  } catch {
-    return {}
-  }
+  } catch {}
+}
+
+export default function (...extraDirs: string[]) {
+  return inner(...extraDirs) ?? {}
 }
