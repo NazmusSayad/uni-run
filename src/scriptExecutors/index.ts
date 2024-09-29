@@ -287,6 +287,20 @@ export default as<ScriptExecutorOptions[]>([
   },
 
   {
+    name: 'PHP',
+    exts: ['php'],
+    getRuntime(args, options, config) {
+      return {
+        exec: ['php', ...args],
+        install: {
+          check: ['php', '--version'],
+          hints: ['Please install PHP from https://www.php.net'],
+        },
+      }
+    },
+  },
+
+  {
     name: 'HTML Server',
     exts: ['html', 'htm'],
     getRuntime([script, ...args], options, config) {
