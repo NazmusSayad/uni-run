@@ -1,5 +1,5 @@
 import colors from '../lib/colors'
-import { confirm } from '@inquirer/prompts'
+import confirm from '@inquirer/confirm'
 import { RuntimeOptions } from './types.t'
 import { sync as spawnSync } from 'cross-spawn'
 
@@ -18,8 +18,11 @@ export default async function (runtime: RuntimeOptions): Promise<boolean> {
   )
 
   if (!install.command?.length) return false
-  const ans = await confirm({ message: 'Do you want to install it?' })
-  process.stdin.setRawMode(false)
+  const ans = await confirm(
+    { message: 'Do you want to install it?' },
+    { clearPromptOnDone: true }
+  )
+
   process.stdin.resume()
 
   if (ans) {
