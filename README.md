@@ -1,5 +1,3 @@
-Here is the corrected grammar for your document:
-
 # uni-run
 
 `uni-run` is a versatile CLI tool designed to run various types of scripts, including but not limited to JavaScript, TypeScript, Python, Java, HTML, SASS, Lua, and more. It provides a unified interface to execute scripts with additional features like watching for file changes, benchmarking execution time, and more.
