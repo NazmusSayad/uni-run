@@ -56,7 +56,7 @@ export default class Execution {
       readline.emitKeypressEvents(process.stdin)
 
       if (!this.options.stdinSafeMode) {
-        process.stdin.setRawMode?.(true)
+        process.stdin.setRawMode(true)
       }
 
       process.stdin.on('keypress', (_, key) => {
