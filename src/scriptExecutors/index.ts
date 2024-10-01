@@ -305,7 +305,7 @@ export default as<ScriptExecutorOptions[]>([
         exec: ['light-express-server', script, ...args],
         watchExts: ['css', 'js', 'javascript'],
         install: {
-          check: ['light-express-server', '--version'],
+          check: ['light-express-server', '--help'],
           command: ['npm', 'install', '-g', 'light-express-server'],
           hints: [
             'Please install light-express-server from https://www.npmjs.com/package/light-express-server',
