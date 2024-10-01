@@ -1,6 +1,6 @@
 import { cleanCacheDir } from '../scriptExecutors/helpers'
-// cleanCacheDir()
+cleanCacheDir()
 
 import '../app'
-import './dev'
+// import './dev'
 import './scripts'

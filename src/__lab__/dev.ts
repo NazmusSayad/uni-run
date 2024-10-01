@@ -2,4 +2,4 @@ import { app } from '../arg'
 
 // app.start(['clean'])
 // app.start(['list'])
-// app.start(['./scripts/index.js'])
+app.start(['./scripts/main.ts', '-b'])

@@ -90,22 +90,21 @@ export default class Execution {
     this.killProcess()
     this.clearBeforeStart()
     this.renderInfoLogs()
-
     this.isExecutionExecutedAnyTime = true
 
-    if (this.preStartArgs) this.spawnSync(this.preStartArgs)
-    this.child = this.spawnAsync(this.startArgs)
+    if (this.preStartArgs) {
+      this.spawnSync(this.preStartArgs)
+    }
 
+    this.startBenchmark()
+    this.child = this.spawnAsync(this.startArgs)
     this.child.on('exit', (code) => {
+      this.endBenchmark()
+
       if (code && code > 0) {
         console.log(
           colors.red(`Process exited with code: ${colors.yellow(String(code))}`)
         )
-      }
-
-      if (this.isBenchmarkRunning) {
-        console.timeEnd(this.benchMarkText)
-        this.isBenchmarkRunning = false
       }
 
       if (this.options.keystrokeReload) {
@@ -195,7 +194,9 @@ export default class Execution {
         colors.green(new Date().toLocaleString())
       )
     }
+  }
 
+  private startBenchmark() {
     if (this.options.benchmark) {
       if (this.isBenchmarkRunning) {
         console.timeEnd(this.benchMarkText)
@@ -204,6 +205,13 @@ export default class Execution {
       }
 
       console.time(this.benchMarkText)
+    }
+  }
+
+  private endBenchmark() {
+    if (this.isBenchmarkRunning) {
+      console.timeEnd(this.benchMarkText)
+      this.isBenchmarkRunning = false
     }
   }
 }
