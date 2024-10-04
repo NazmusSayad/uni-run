@@ -90,7 +90,7 @@ module.exports = [
     exts: ['ext'],
     getRuntime(args, options, config) {
       return {
-        start: ['YOUR_BIN', ...args],
+        exec: ['YOUR_BIN', ...args],
       }
     },
   },
@@ -115,7 +115,7 @@ uniRun.addExecutorBefore({
   exts: ['ext'],
   getRuntime(args, options, config) {
     return {
-      start: ['YOUR_BIN', ...args],
+      exec: ['YOUR_BIN', ...args],
     }
   },
 })
@@ -142,7 +142,7 @@ uniRun.addExecutorBefore({
   exts: ['ext'],
   getRuntime(args, options, config) {
     return {
-      start: ['YOUR_BIN', ...args],
+      exec: ['YOUR_BIN', ...args],
     }
   },
 })

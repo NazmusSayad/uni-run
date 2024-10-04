@@ -26,10 +26,7 @@ export default as<ScriptExecutorOptions[]>([
 
       return {
         exec: [runtime, ...args],
-        install: {
-          check: [runtime, '--version'],
-          hints: installHints,
-        },
+        installHints,
       }
     },
   },
@@ -64,10 +61,7 @@ export default as<ScriptExecutorOptions[]>([
       return {
         exec: [runtime, ...args],
         watchExts: ['js', 'javascript', 'jsx', 'cjs', 'cjsx', 'mjs', 'mjsx'],
-        install: {
-          check: [runtime, '--version'],
-          hints: installHints,
-        },
+        installHints,
       }
     },
   },
@@ -78,10 +72,7 @@ export default as<ScriptExecutorOptions[]>([
     getRuntime(args, options, config) {
       return {
         exec: ['python', ...args],
-        install: {
-          check: ['python', '--version'],
-          hints: ['Please install Python from https://www.python.org'],
-        },
+        installHints: ['Please install Python from https://www.python.org'],
       }
     },
   },
@@ -92,10 +83,7 @@ export default as<ScriptExecutorOptions[]>([
     getRuntime(args, options, config) {
       return {
         exec: ['java', ...args],
-        install: {
-          check: ['java', '--version'],
-          hints: ['Please install Java from https://www.oracle.com/java'],
-        },
+        installHints: ['Please install Java from https://www.oracle.com/java'],
       }
     },
   },
@@ -106,12 +94,9 @@ export default as<ScriptExecutorOptions[]>([
     getRuntime(args, options, config) {
       return {
         exec: ['powershell', '-File', ...args],
-        install: {
-          check: ['powershell', '-command', 'echo ok'],
-          hints: [
-            'Please install Powershell from https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell',
-          ],
-        },
+        installHints: [
+          'Please install Powershell from https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell',
+        ],
       }
     },
   },
@@ -122,10 +107,7 @@ export default as<ScriptExecutorOptions[]>([
     getRuntime(args, options, config) {
       return {
         exec: ['cmd', '/c', ...args],
-        install: {
-          check: ['cmd', '/c', 'echo ok'],
-          hints: ['Please install Command Prompt from Windows'],
-        },
+        installHints: ['Please install Command Prompt from Windows'],
       }
     },
   },
@@ -136,10 +118,9 @@ export default as<ScriptExecutorOptions[]>([
     getRuntime(args, options, config) {
       return {
         exec: ['bash', ...args],
-        install: {
-          check: ['bash', '--version'],
-          hints: ['Please install Bash from https://www.gnu.org/software/bash'],
-        },
+        installHints: [
+          'Please install Bash from https://www.gnu.org/software/bash',
+        ],
       }
     },
   },
@@ -150,10 +131,7 @@ export default as<ScriptExecutorOptions[]>([
     getRuntime(args, options, config) {
       return {
         exec: ['fish', ...args],
-        install: {
-          check: ['fish', '--version'],
-          hints: ['Please install Fish from https://fishshell.com'],
-        },
+        installHints: ['Please install Fish from https://fishshell.com'],
       }
     },
   },
@@ -164,10 +142,7 @@ export default as<ScriptExecutorOptions[]>([
     getRuntime(args, options, config) {
       return {
         exec: ['lua', ...args],
-        install: {
-          check: ['lua', '-v'],
-          hints: ['Please install Lua from https://www.lua.org'],
-        },
+        installHints: ['Please install Lua from https://www.lua.org'],
       }
     },
   },
@@ -178,10 +153,7 @@ export default as<ScriptExecutorOptions[]>([
     getRuntime(args, options, config) {
       return {
         exec: ['ruby', ...args],
-        install: {
-          check: ['ruby', '-v'],
-          hints: ['Please install Ruby from https://www.ruby-lang.org'],
-        },
+        installHints: ['Please install Ruby from https://www.ruby-lang.org'],
       }
     },
   },
@@ -192,10 +164,7 @@ export default as<ScriptExecutorOptions[]>([
     getRuntime(args, options, config) {
       return {
         exec: ['go', 'run', ...args],
-        install: {
-          check: ['go', 'version'],
-          hints: ['Please install Ruby from https://www.ruby-lang.org'],
-        },
+        installHints: ['Please install Ruby from https://www.ruby-lang.org'],
       }
     },
   },
@@ -209,10 +178,7 @@ export default as<ScriptExecutorOptions[]>([
       return {
         compile: ['gcc', script, '-o', output],
         exec: [output, ...args],
-        install: {
-          check: ['gcc', '--version'],
-          hints: ['Please install GCC from https://gcc.gnu.org'],
-        },
+        installHints: ['Please install GCC from https://gcc.gnu.org'],
       }
     },
   },
@@ -226,10 +192,7 @@ export default as<ScriptExecutorOptions[]>([
       return {
         compile: ['g++', script, '-o', output],
         exec: [output, ...args],
-        install: {
-          check: ['g++', '--version'],
-          hints: ['Please install GCC from https://gcc.gnu.org'],
-        },
+        installHints: ['Please install GCC from https://gcc.gnu.org'],
       }
     },
   },
@@ -243,10 +206,7 @@ export default as<ScriptExecutorOptions[]>([
       return {
         compile: ['mcs', '-out:' + output, script],
         exec: [output, ...args],
-        install: {
-          check: ['mcs', '--version'],
-          hints: ['Please install Mono from https://www.mono-project.com'],
-        },
+        installHints: ['Please install Mono from https://www.mono-project.com'],
       }
     },
   },
@@ -260,10 +220,7 @@ export default as<ScriptExecutorOptions[]>([
       return {
         compile: ['rustc', script, '-o', output],
         exec: [output, ...args],
-        install: {
-          check: ['rustc', '--version'],
-          hints: ['Please install Rust from https://www.rust-lang.org'],
-        },
+        installHints: ['Please install Rust from https://www.rust-lang.org'],
       }
     },
   },
@@ -274,11 +231,8 @@ export default as<ScriptExecutorOptions[]>([
     getRuntime(args, options, config) {
       return {
         exec: ['sass', ...args],
-        install: {
-          check: ['sass', '--version'],
-          command: ['npm', 'install', '-g', 'sass'],
-          hints: ['Please install SASS from https://sass-lang.com'],
-        },
+        install: ['npm', 'install', '-g', 'sass'],
+        installHints: ['Please install SASS from https://sass-lang.com'],
       }
     },
   },
@@ -289,10 +243,7 @@ export default as<ScriptExecutorOptions[]>([
     getRuntime(args, options, config) {
       return {
         exec: ['php', ...args],
-        install: {
-          check: ['php', '--version'],
-          hints: ['Please install PHP from https://www.php.net'],
-        },
+        installHints: ['Please install PHP from https://www.php.net'],
       }
     },
   },
@@ -304,13 +255,10 @@ export default as<ScriptExecutorOptions[]>([
       return {
         exec: ['light-express-server', script, ...args],
         watchExts: ['css', 'js', 'javascript'],
-        install: {
-          check: ['light-express-server', '--help'],
-          command: ['npm', 'install', '-g', 'light-express-server'],
-          hints: [
-            'Please install light-express-server from https://www.npmjs.com/package/light-express-server',
-          ],
-        },
+        install: ['npm', 'install', '-g', 'light-express-server'],
+        installHints: [
+          'Please install light-express-server from https://www.npmjs.com/package/light-express-server',
+        ],
       }
     },
   },

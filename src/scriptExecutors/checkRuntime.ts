@@ -4,36 +4,31 @@ import { RuntimeOptions } from './types.t'
 import { sync as spawnSync } from 'cross-spawn'
 
 export default async function (runtime: RuntimeOptions): Promise<boolean> {
-  const install = runtime.install
-  if (!install) return true
+  if (!runtime.install && !runtime.installHints) return true
 
-  if (!install.check?.length) return true
-  const [checkCmd, ...checkArgs] = install.check
-
-  const result = spawnSync(checkCmd, checkArgs, { stdio: 'ignore' })
+  const command = runtime.exec[0]
+  if (!command) return true
+  const result = spawnSync('which', [command], { stdio: 'ignore' })
   if (result.status === 0) return true
 
-  console.error(
-    colors.yellow(runtime.exec[0]) + colors.red(' is not installed.')
-  )
+  console.error(colors.yellow(command) + colors.red(' is not installed.'))
+  if (!runtime.install?.length) return false
 
-  if (!install.command?.length) return false
   const ans = await confirm(
     { message: 'Do you want to install it?' },
     { clearPromptOnDone: true }
   )
-
   process.stdin.resume()
 
   if (ans) {
-    const [installCmd, ...installArgs] = install.command
+    const [installCmd, ...installArgs] = runtime.install
     const result = spawnSync(installCmd, installArgs, { stdio: 'inherit' })
     return result.status === 0
   }
 
-  if (install.hints?.length) {
+  if (runtime.installHints?.length) {
     console.log(colors.bold('How to install:'))
-    install.hints.forEach((hint) => console.log(hint))
+    runtime.installHints.forEach((hint) => console.log(hint))
   }
 
   return false

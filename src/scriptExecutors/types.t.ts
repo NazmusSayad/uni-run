@@ -9,11 +9,9 @@ export type RuntimeOptions = {
   exec: string[]
   compile?: string[]
   watchExts?: string[]
-  install?: {
-    check: string[]
-    hints?: string[]
-    command?: string[]
-  }
+
+  install?: string[]
+  installHints?: string[]
 }
 
 export type ScriptExecutorOptions = {
