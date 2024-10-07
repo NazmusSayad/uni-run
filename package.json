@@ -1,6 +1,6 @@
 {
   "name": "uni-run",
-  "version": "1.1.17",
+  "version": "1.1.18",
   "description": "Universal Runner for many language",
   "type": "commonjs",
   "scripts": {
@@ -23,7 +23,7 @@
     "chokidar": "^4.0.1",
     "cross-spawn": "^7.0.3",
     "ignore": "^6.0.2",
-    "noarg": "^3.1.6"
+    "noarg": "^3.1.8"
   },
   "devDependencies": {
     "@types/cross-spawn": "^6.0.6",
