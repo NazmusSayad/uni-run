@@ -1,32 +1,67 @@
 import as from '../helpers/as'
+import os from '../helpers/os'
 import { getUniqueCacheDir } from './helpers'
-import { ScriptExecutorOptions } from './types.t'
+import { RuntimeOptions, ScriptExecutorOptions } from './types.t'
 
 export default as<ScriptExecutorOptions[]>([
   {
     name: 'JavaScript',
     exts: ['js', 'javascript', 'jsx', 'cjs', 'cjsx', 'mjs', 'mjsx'],
     getRuntime(args, options, config) {
-      let installHints: undefined | string[]
+      const runtimeOptions: Partial<RuntimeOptions> = {}
       const runtime = config['javascript-runtime'] || 'node'
 
       switch (runtime) {
         case 'node':
-          installHints = ['Please install Node.js from https://nodejs.org']
+          runtimeOptions.installHints = [
+            'Please install Node.js from https://nodejs.org',
+          ]
           break
 
         case 'deno':
-          installHints = ['Please install Deno from https://deno.land']
+          if (os.isWindows) {
+            runtimeOptions.install = [
+              'powershell',
+              '-c',
+              'irm https://deno.land/install.ps1 | iex',
+            ]
+          } else if (os.isUnix) {
+            runtimeOptions.install = [
+              'bash',
+              '-c',
+              'curl -fsSL https://deno.land/install.sh | bash',
+            ]
+          }
+
+          runtimeOptions.installHints = [
+            'Please install Deno from https://deno.land',
+          ]
           break
 
         case 'bun':
-          installHints = ['Please install Bun from https://bun.sh']
+          if (os.isWindows) {
+            runtimeOptions.install = [
+              'powershell',
+              '-c',
+              'irm bun.sh/install.ps1 | iex',
+            ]
+          } else if (os.isUnix) {
+            runtimeOptions.install = [
+              'bash',
+              '-c',
+              'curl -fsSL https://bun.sh/install | bash',
+            ]
+          }
+
+          runtimeOptions.installHints = [
+            'Please install Bun from https://bun.sh',
+          ]
           break
       }
 
       return {
+        ...runtimeOptions,
         exec: [runtime, ...args],
-        installHints,
       }
     },
   },
@@ -35,33 +70,70 @@ export default as<ScriptExecutorOptions[]>([
     name: 'TypeScript',
     exts: ['ts', 'tsx', 'cts', 'ctsx', 'mts', 'mtsx'],
     getRuntime(args, options, config) {
-      let installHints: undefined | string[]
+      const runtimeOptions: Partial<RuntimeOptions> = {}
       const runtime = config['typescript-runtime'] || 'tsx'
 
       switch (runtime) {
         case 'tsx':
-          installHints = ['Please install tsx from https://tsx.is']
-          break
-
-        case 'ts-node':
-          installHints = [
-            'Please install ts-node from https://www.npmjs.com/package/ts-node',
+          runtimeOptions.install = ['npm', 'install', '-g', 'tsx']
+          runtimeOptions.installHints = [
+            'Please install tsx from https://tsx.is',
           ]
           break
 
+        case 'ts-node':
+          runtimeOptions.install = ['npm', 'install', '-g', 'ts-node']
+          runtimeOptions.installHints = [
+            'Please install ts-node from https://www.npmjs.com/package/ts-node',
+          ]
+
+          break
+
         case 'deno':
-          installHints = ['Please install Deno from https://deno.land']
+          if (os.isWindows) {
+            runtimeOptions.install = [
+              'powershell',
+              '-c',
+              'irm https://deno.land/install.ps1 | iex',
+            ]
+          } else if (os.isUnix) {
+            runtimeOptions.install = [
+              'bash',
+              '-c',
+              'curl -fsSL https://deno.land/install.sh | bash',
+            ]
+          }
+
+          runtimeOptions.installHints = [
+            'Please install Deno from https://deno.land',
+          ]
           break
 
         case 'bun':
-          installHints = ['Please install Bun from https://bun.sh']
+          if (os.isWindows) {
+            runtimeOptions.install = [
+              'powershell',
+              '-c',
+              'irm bun.sh/install.ps1 | iex',
+            ]
+          } else if (os.isUnix) {
+            runtimeOptions.install = [
+              'bash',
+              '-c',
+              'curl -fsSL https://bun.sh/install | bash',
+            ]
+          }
+
+          runtimeOptions.installHints = [
+            'Please install Bun from https://bun.sh',
+          ]
           break
       }
 
       return {
+        ...runtimeOptions,
         exec: [runtime, ...args],
         watchExts: ['js', 'javascript', 'jsx', 'cjs', 'cjsx', 'mjs', 'mjsx'],
-        installHints,
       }
     },
   },

@@ -1,6 +1,6 @@
 {
   "name": "uni-run",
-  "version": "1.1.16",
+  "version": "1.1.17",
   "description": "Universal Runner for many language",
   "type": "commonjs",
   "scripts": {
@@ -9,6 +9,7 @@
     "tsc": "tsc --watch --noEmit",
     "live": "node ./dist/__lab__/index.js",
     "tsx": "tsx ./src/__lab__/index.ts",
+    "tsxw": "tsx --watch ./src/__lab__/index.ts",
     "lab": "run ./src/__lab__/index.ts --focus ./src -- UNI_RUN_LAB_MODE"
   },
   "main": "./dist/index.js",

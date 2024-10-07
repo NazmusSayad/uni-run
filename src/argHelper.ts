@@ -15,11 +15,11 @@ export const executionConfig = NoArg.defineConfig({
         'Disable raw mode for stdin. Do not needed with `--disable-reload-key`'
       ),
 
-    exit: NoArg.boolean()
-      .aliases('x')
-      .description('Exit the script after the first execution'),
-    quiet: NoArg.boolean()
+    quit: NoArg.boolean()
       .aliases('q')
+      .description('Do not watch the script. Just run it once and exit'),
+    silent: NoArg.boolean()
+      .aliases('s')
       .description('Do not show any output of the script'),
     keep: NoArg.boolean()
       .aliases('k')
@@ -47,19 +47,18 @@ export const executionConfig = NoArg.defineConfig({
       .minLength(1)
       .description('The prefix to show before the execution time'),
 
-    shell: NoArg.boolean()
-      .aliases('sh')
-      .description('Run the script in a shell for more low-level control.'),
     cwd: NoArg.string()
       .default(process.cwd())
       .description('Set the current working directory'),
-
-    info: NoArg.boolean().description('Show information about the script'),
-    time: NoArg.boolean().description('Show the execution time at the start'),
     env: NoArg.array(NoArg.string()).description('Set environment variables'),
     'node-dev': NoArg.boolean().description(
       'Set env.NODE_ENV to "development"'
     ),
+    shell: NoArg.boolean().description(
+      'Run script in shell for low-level commands'
+    ),
+    info: NoArg.boolean().description('Show information about the script'),
+    time: NoArg.boolean().description('Show the execution time at the start'),
   },
 
   listArgument: {
@@ -76,7 +75,7 @@ export const executionConfig = NoArg.defineConfig({
 
 export type ExecuteOptions = ReturnType<typeof mapFlagsToOptions>
 export function mapFlagsToOptions(flags: NoArg.InferFlags<typeof app>) {
-  if (flags.exit) {
+  if (flags.quit) {
     flags['disable-reload-key'] = true
     flags['do-not-watch'] = true
   }
@@ -84,7 +83,7 @@ export function mapFlagsToOptions(flags: NoArg.InferFlags<typeof app>) {
   return {
     cwd: flags.cwd,
     shell: !!flags.shell,
-    silent: !!flags.quiet,
+    silent: !!flags.silent,
     showInfo: !!flags.info,
     showTime: !!flags.time,
     benchmark: !!(flags.bench ?? flags['bench-prefix']),
