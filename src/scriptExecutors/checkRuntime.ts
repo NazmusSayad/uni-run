@@ -1,7 +1,16 @@
+import os from '../helpers/os'
 import colors from '../lib/colors'
 import confirm from '@inquirer/confirm'
 import { RuntimeOptions } from './types.t'
 import { sync as spawnSync } from 'cross-spawn'
+
+function isBinaryInstalled(bin: string) {
+  const result = spawnSync(os.isWindows ? 'where' : 'which', [bin], {
+    stdio: 'ignore',
+  })
+
+  return result.status === 0
+}
 
 export default async function (runtime: RuntimeOptions): Promise<boolean> {
   if (!runtime.install?.length && !runtime.installHints?.length) return true
@@ -9,8 +18,8 @@ export default async function (runtime: RuntimeOptions): Promise<boolean> {
   const command = runtime.exec[0]
   if (!command) return true
 
-  const result = spawnSync('which', [command], { stdio: 'ignore' })
-  if (result.status === 0) return true
+  const isInstalled = isBinaryInstalled(command)
+  if (isInstalled) return true
 
   console.error(colors.yellow(command) + colors.red(' is not installed.'))
 
