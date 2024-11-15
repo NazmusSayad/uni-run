@@ -15,9 +15,9 @@ export const executionConfig = NoArg.defineConfig({
         'Disable raw mode for stdin. Do not needed with `--disable-reload-key`'
       ),
 
-    quit: NoArg.boolean()
-      .aliases('q')
-      .description('Do not watch the script. Just run it once and exit'),
+    exit: NoArg.boolean().description(
+      'Do not watch the script. Just run it once and exit'
+    ),
     silent: NoArg.boolean()
       .aliases('s')
       .description('Do not show any output of the script'),
@@ -75,9 +75,9 @@ export const executionConfig = NoArg.defineConfig({
 
 export type ExecuteOptions = ReturnType<typeof mapFlagsToOptions>
 export function mapFlagsToOptions(flags: NoArg.InferFlags<typeof app>) {
-  if (flags.quit) {
-    flags['disable-reload-key'] = true
+  if (flags.exit) {
     flags['do-not-watch'] = true
+    flags['disable-reload-key'] = true
   }
 
   return {

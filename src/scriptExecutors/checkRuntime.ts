@@ -15,7 +15,7 @@ function isBinaryInstalled(bin: string) {
 export default async function (runtime: RuntimeOptions): Promise<boolean> {
   if (!runtime.install?.length && !runtime.installHints?.length) return true
 
-  const command = runtime.exec[0]
+  const command = runtime.compile?.[0] ?? runtime.exec[0]
   if (!command) return true
 
   const isInstalled = isBinaryInstalled(command)

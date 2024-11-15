@@ -9,7 +9,7 @@ const scripts = fs
   .map((script) => path.join(scriptsDir, script))
 
 function start(args: string[]) {
-  app.start([...args, '-dk', '-k'])
+  app.start([...args, '--exit'])
 }
 
 console.log(
