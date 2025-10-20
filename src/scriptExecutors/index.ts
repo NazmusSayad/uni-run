@@ -1,3 +1,4 @@
+import path from 'path'
 import as from '../helpers/as'
 import os from '../helpers/os'
 import { getUniqueCacheDir } from './helpers'
@@ -325,11 +326,11 @@ export default as<ScriptExecutorOptions[]>([
     exts: ['html', 'htm'],
     getRuntime([script, ...args], options, config) {
       return {
-        exec: ['light-express-server', script, ...args],
+        exec: ['live-server', path.dirname(script), ...args],
         watchExts: ['css', 'js', 'javascript'],
-        install: ['npm', 'install', '-g', 'light-express-server'],
+        install: ['npm', 'install', '-g', 'live-server'],
         installHints: [
-          'Please install light-express-server from https://www.npmjs.com/package/light-express-server',
+          'Please install live-server from https://www.npmjs.com/package/live-server',
         ],
       }
     },
