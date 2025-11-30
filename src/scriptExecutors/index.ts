@@ -162,6 +162,17 @@ export default as<ScriptExecutorOptions[]>([
   },
 
   {
+    name: 'Dart',
+    exts: ['dart'],
+    getRuntime(args, options, config) {
+      return {
+        exec: ['dartvm', ...args],
+        installHints: ['Please install Dart from https://dart.dev'],
+      }
+    },
+  },
+
+  {
     name: 'Powershell',
     exts: ['ps1'],
     getRuntime(args, options, config) {
