@@ -1,7 +1,7 @@
 import path from 'path'
 import as from '../helpers/as'
 import os from '../helpers/os'
-import { getUniqueCacheDir } from './helpers'
+import { getOutputFileName } from './helpers'
 import { RuntimeOptions, ScriptExecutorOptions } from './types.t'
 
 export default as<ScriptExecutorOptions[]>([
@@ -257,7 +257,7 @@ export default as<ScriptExecutorOptions[]>([
     name: 'C - GCC',
     exts: ['c'],
     getRuntime([script, ...args], options, config) {
-      const output = getUniqueCacheDir('/c-gcc') + '/output'
+      const output = getOutputFileName('/c-gcc')
 
       return {
         compile: ['gcc', script, '-o', output],
@@ -271,7 +271,7 @@ export default as<ScriptExecutorOptions[]>([
     name: 'C++ - GCC',
     exts: ['cpp'],
     getRuntime([script, ...args], options, config) {
-      const output = getUniqueCacheDir('/cpp-gcc') + '/output'
+      const output = getOutputFileName('/cpp-gcc')
 
       return {
         compile: ['g++', script, '-o', output],
@@ -285,7 +285,7 @@ export default as<ScriptExecutorOptions[]>([
     name: 'C# - Mono (Windows)',
     exts: ['cs'],
     getRuntime([script, ...args], options, config) {
-      const output = getUniqueCacheDir('/cs-mono') + '/output.exe'
+      const output = getOutputFileName('/cs-mono')
 
       return {
         compile: ['mcs', '-out:' + output, script],
@@ -299,7 +299,7 @@ export default as<ScriptExecutorOptions[]>([
     name: 'Rust - rustc',
     exts: ['rs'],
     getRuntime([script, ...args], options, config) {
-      const output = getUniqueCacheDir('/rust-rustc') + '/output'
+      const output = getOutputFileName('/rust-rustc')
 
       return {
         compile: ['rustc', script, '-o', output],
