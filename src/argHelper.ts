@@ -16,7 +16,7 @@ export const executionConfig = NoArg.defineConfig({
       ),
 
     exit: NoArg.boolean().description(
-      'Do not watch the script. Just run it once and exit'
+      'Do not watch the script. Just run it once and exit. Forced with `rux` or `uni-rux`'
     ),
     silent: NoArg.boolean()
       .aliases('s')

@@ -8,8 +8,13 @@ import checkRuntime from './scriptExecutors/checkRuntime'
 import getUserExecutors from './helpers/getUserExecutors'
 import { ScriptExecutorOptions } from './scriptExecutors/types.t'
 import { cleanCacheDir, getCacheDir } from './scriptExecutors/helpers'
+import { getRuntime } from './local-env'
 
 arg.app.on(async ([script, listArs, trailingArgs], flags) => {
+  if (getRuntime() === 'rux') {
+    flags.exit = true
+  }
+
   const executionConfig = getConfig(flags.cwd)
   const userExecutors = getUserExecutors(flags.cwd)
 
@@ -54,6 +59,10 @@ arg.app.on(async ([script, listArs, trailingArgs], flags) => {
 })
 
 arg.exec.on(([listArs, trailingArgs], flags) => {
+  if (getRuntime() === 'rux') {
+    flags.exit = true
+  }
+
   new Execution(mapFlagsToOptions(flags), [...listArs, ...trailingArgs]).start()
 })
 

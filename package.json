@@ -1,6 +1,6 @@
 {
   "name": "uni-run",
-  "version": "1.1.23",
+  "version": "1.1.24",
   "description": "Universal Runner for many language",
   "type": "commonjs",
   "scripts": {
@@ -15,7 +15,9 @@
   "main": "./dist/index.js",
   "bin": {
     "run": "./dist/bin.js",
-    "uni-run": "./dist/bin.js"
+    "rux": "./dist/bix.js",
+    "uni-run": "./dist/bin.js",
+    "uni-rux": "./dist/bix.js"
   },
   "dependencies": {
     "@inquirer/confirm": "^5.1.19",
