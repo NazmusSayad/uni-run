@@ -23,7 +23,7 @@ export const executionConfig = NoArg.defineConfig({
       .description('Do not show any output of the script'),
     keep: NoArg.boolean()
       .aliases('k')
-      .description('Do not clear the console while starting the script'),
+      .description('Do not clear the console while starting the script. Default with `rux` or `uni-rux`'),
 
     ext: NoArg.array(NoArg.string())
       .aliases('e')

@@ -13,6 +13,7 @@ import { getRuntime } from './local-env'
 arg.app.on(async ([script, listArs, trailingArgs], flags) => {
   if (getRuntime() === 'rux') {
     flags.exit = true
+    flags.keep = flags.keep ?? true
   }
 
   const executionConfig = getConfig(flags.cwd)
@@ -61,7 +62,9 @@ arg.app.on(async ([script, listArs, trailingArgs], flags) => {
 arg.exec.on(([listArs, trailingArgs], flags) => {
   if (getRuntime() === 'rux') {
     flags.exit = true
+    flags.keep = flags.keep ?? true
   }
+  
 
   new Execution(mapFlagsToOptions(flags), [...listArs, ...trailingArgs]).start()
 })

@@ -9,7 +9,7 @@
 - **Environment Variables**: Set environment variables for script execution.
 - **Shell Execution**: Run scripts in a shell for more control.
 - **Console Clearing**: Clear the console before running the script.
-- **Reload Key**: Enable reloading the script with a specific key combination.
+- **Reload Key**: Enable reloading the script with Ctrl+R or F5.
 - **Information Display**: Show detailed information about the script execution.
 
 ## Installation
@@ -29,7 +29,11 @@ To run a script, use the following command:
 ```sh
 run script.ext [options] -- [args for internal bin]
 uni-run script.ext [options] -- [args for internal bin]
+rux script.ext [options] -- [args for internal bin]
+uni-rux script.ext [options] -- [args for internal bin]
 ```
+
+Note: `rux` and `uni-rux` run scripts once and exit (no watch mode by default).
 
 ### Examples
 
@@ -64,6 +68,25 @@ run ./scripts/main.js -- --some someValue
 ```
 
 Here `--some someValue` will be passed to `node` and will be ignored by `uni-run`.
+
+#### Executing with a custom binary
+
+```sh
+run exec python ./scripts/custom.py
+run exec custom-binary arg1 arg2
+```
+
+#### Listing supported scripts
+
+```sh
+run list
+```
+
+#### Cleaning cache
+
+```sh
+run clean
+```
 
 ## Define Custom Configuration
 
@@ -123,12 +146,28 @@ uniRun.addExecutorBefore({
 
 #### `start(args?: string[])`:
 
-Starts the application with the provided arguments.
+Starts the application with the provided arguments. If no arguments are provided, it inherits from CLI.
 
 ```typescript
 import uniRun from 'uni-run'
 
 uniRun.start(['arg1', 'arg2'])
+```
+
+### Exports
+
+The package also exports the following utilities:
+
+- `currentModule` - Get the current module information
+- `getConfig(cwd?: string)` - Get configuration from `.uni-run.json`
+- `getUserExecutors(cwd?: string)` - Get user-defined executors from `.uni-run.cjs`
+- `ScriptExecutorOptions` and other types from `./scriptExecutors/types.t`
+
+```typescript
+import { getConfig, getUserExecutors } from 'uni-run'
+
+const config = getConfig('/path/to/project')
+const executors = getUserExecutors('/path/to/project')
 ```
 
 ### Example Usage
