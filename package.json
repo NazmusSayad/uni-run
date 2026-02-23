@@ -27,6 +27,12 @@
       "require": "./dist/index.cjs"
     }
   },
+  "bin": {
+    "run": "./dist/run.mjs",
+    "rux": "./dist/rux.mjs",
+    "uni-run": "./dist/run.mjs",
+    "uni-rux": "./dist/rux.mjs"
+  },
   "typesVersions": {
     "*": {
       "bin": [

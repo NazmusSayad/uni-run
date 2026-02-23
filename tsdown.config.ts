@@ -4,8 +4,8 @@ import packageJSON from './package.json' with { type: 'json' }
 
 export default defineConfig({
   entry: {
-    bin: './src/bin.ts',
-    index: './src/index.ts',
+    run: './src/run.ts',
+    rux: './src/rux.ts',
   },
 
   outDir: './dist',
