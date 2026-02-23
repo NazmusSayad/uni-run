@@ -11,7 +11,8 @@
     "exports": "tsx ./write-exports.ts",
     "build": "tsdown --config ./tsdown.config.ts",
     "dev": "concurrently --names \"R,T\" --prefix-colors \"blue.dim,magenta.dim\" \"tsdown --config ./tsdown.config.ts --watch\" \"tsc --noEmit --watch\"",
-    "start": "tsx --watch ./src/index.ts"
+    "start": "tsx --watch ./src/index.ts",
+    "bin": "tsx ./src/bin.ts"
   },
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
