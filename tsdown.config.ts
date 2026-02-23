@@ -20,7 +20,6 @@ export default defineConfig({
 
   external: [
     /node:/gim,
-    /node_modules/gim,
     ...getExternal((packageJSON as any).dependencies),
     // ...getExternal((packageJSON as any).devDependencies),
     // ...getExternal((packageJSON as any).peerDependencies),
@@ -32,7 +31,6 @@ export default defineConfig({
     return {
       ...options,
       entryFileNames: `[name].${ext}`,
-      chunkFileNames: `__[name].[hash].${ext}`,
     }
   },
 })

@@ -1,3 +1,5 @@
+import { getSystemRuntime } from '@/helpers/hack'
+import { installTip } from '@/helpers/lib'
 import chalk from 'chalk'
 import { spawnSync } from 'child_process'
 import NoArg from 'noarg'
@@ -16,6 +18,11 @@ export const app = NoArg.create('uni-run', {
 })
 
 app.on(async ([script, listArs, trailingArgs], flags) => {
+  if (getSystemRuntime() === 'rux') {
+    flags.exit = true
+    flags.keep = flags.keep ?? true
+  }
+
   const options = resolveSharedConfigOptions(flags)
 
   const scriptRunner = getRuntimeByScript(script)
@@ -49,30 +56,12 @@ app.on(async ([script, listArs, trailingArgs], flags) => {
   )
 
   if (!scriptRunner.isInstalled) {
-    const startBin = spawnSync(
-      os.platform() === 'win32' ? 'where' : 'which',
-      [runtime.start[0]],
-      {
-        stdio: 'ignore',
-      }
-    )
+    if (runtime.compile?.length) {
+      const compileBinary = runtime.compile[0]
 
-    if (startBin.status !== 0) {
-      console.error(
-        chalk.red('Runtime is not installed:'),
-        chalk.yellow(runtime.start[0])
-      )
-      return console.log(
-        chalk.bgGreen('TIPS:'),
-        'You may try',
-        chalk.cyan(`run exec <YOUR_RUNTIME> ${chalk.yellow(runtime.start[0])}`)
-      )
-    }
-
-    if (runtime.compile) {
       const compileBin = spawnSync(
         os.platform() === 'win32' ? 'where' : 'which',
-        [runtime.compile[0]],
+        [compileBinary],
         {
           stdio: 'ignore',
         }
@@ -81,15 +70,29 @@ app.on(async ([script, listArs, trailingArgs], flags) => {
       if (compileBin.status !== 0) {
         console.error(
           chalk.red('Compiler is not installed:'),
-          chalk.yellow(runtime.compile[0])
+          chalk.yellow(compileBinary)
         )
-        return console.log(
-          chalk.bgGreen('TIPS:'),
-          'You may try',
-          chalk.cyan(
-            `run exec <YOUR_COMPILER> ${chalk.yellow(runtime.compile[0])}`
-          )
+
+        return installTip(compileBinary)
+      }
+    } else {
+      const binary = runtime.start[0]
+
+      const startBin = spawnSync(
+        os.platform() === 'win32' ? 'where' : 'which',
+        [binary],
+        {
+          stdio: 'ignore',
+        }
+      )
+
+      if (startBin.status !== 0) {
+        console.error(
+          chalk.red('Runtime is not installed:'),
+          chalk.yellow(binary)
         )
+
+        return installTip(binary)
       }
     }
   }
