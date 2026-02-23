@@ -1,7 +1,6 @@
 {
   "name": "uni-run",
-  "version": "2.0.0",
-  "sideEffects": false,
+  "version": "2.0.1",
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",

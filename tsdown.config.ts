@@ -1,4 +1,3 @@
-import { type InternalModuleFormat } from 'rolldown'
 import { defineConfig } from 'tsdown'
 import packageJSON from './package.json' with { type: 'json' }
 
@@ -8,22 +7,15 @@ export default defineConfig({
     rux: './src/rux.ts',
   },
 
+  format: 'es',
   outDir: './dist',
   tsconfig: './tsconfig.json',
-  format: ['cjs', 'es'] satisfies InternalModuleFormat[],
-
-  dts: true,
-  sourcemap: true,
 
   target: 'ES6',
   minify: 'dce-only',
 
-  external: [
-    /node:/gim,
-    ...getExternal((packageJSON as any).dependencies),
-    // ...getExternal((packageJSON as any).devDependencies),
-    // ...getExternal((packageJSON as any).peerDependencies),
-  ],
+  treeshake: false,
+  external: [/node:/gim, ...getExternal((packageJSON as any).dependencies)],
 
   outputOptions(options, format) {
     const ext = format === 'cjs' ? 'cjs' : format === 'es' ? 'mjs' : 'js'
