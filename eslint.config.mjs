@@ -75,6 +75,7 @@ export default [
       ],
 
       'no-param-reassign': 2,
+      'import/no-default-export': 2,
       '@typescript-eslint/no-floating-promises': 2,
       'prefer-arrow-callback': [2, { allowNamedFunctions: false }],
       'func-style': [2, 'declaration', { allowArrowFunctions: false }],
@@ -101,7 +102,13 @@ export default [
         },
       ],
 
-      'check-file/folder-naming-convention': [2, { '*/**': 'KEBAB_CASE' }],
+      'check-file/folder-naming-convention': [
+        2,
+        { '*/**': 'KEBAB_CASE' },
+        {
+          ignoreWords: ['__lab__'],
+        },
+      ],
       'check-file/filename-naming-convention': [
         2,
         { '**/*.*': 'KEBAB_CASE' },

@@ -1,5 +1,5 @@
 import NoArg from 'noarg'
-import type { app } from './app'
+import type { app } from './handlers/app'
 
 export const executionConfig = NoArg.defineConfig({
   flags: {
@@ -114,3 +114,5 @@ export function resolveSharedConfigOptions(
     } as NodeJS.ProcessEnv,
   }
 }
+
+export type ExecutionConfig = ReturnType<typeof resolveSharedConfigOptions>
