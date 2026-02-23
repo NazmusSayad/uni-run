@@ -4,6 +4,7 @@ import packageJSON from './package.json' with { type: 'json' }
 
 export default defineConfig({
   entry: {
+    bin: './src/bin.ts',
     index: './src/index.ts',
   },
 
@@ -21,8 +22,8 @@ export default defineConfig({
     /node:/gim,
     /node_modules/gim,
     ...getExternal((packageJSON as any).dependencies),
-    ...getExternal((packageJSON as any).devDependencies),
-    ...getExternal((packageJSON as any).peerDependencies),
+    // ...getExternal((packageJSON as any).devDependencies),
+    // ...getExternal((packageJSON as any).peerDependencies),
   ],
 
   outputOptions(options, format) {
