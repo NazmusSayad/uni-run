@@ -2,6 +2,17 @@
 
 A universal CLI tool to run scripts in any language — JavaScript, TypeScript, Python, Java, C, C++, Rust, Go, Ruby, PHP, Dart, Lua, and more. One command, any script, with watch mode, benchmarking, and automatic runtime detection.
 
+## Features
+
+- **19+ languages** supported out of the box, including compiled languages (C, C++, Rust, C#)
+- **Watch mode** — automatically re-runs on file changes with `.gitignore`-aware filtering
+- **Reload keys** — press Ctrl+R or F5 to re-run without saving
+- **Benchmarking** — measure execution time with `--bench`
+- **Configurable runtimes** — swap between `node`/`bun`/`deno`, `python`/`uv`, and more via `~/.uni-run.json`
+- **Environment variables** — inject env vars with `--env KEY=VALUE`
+- **Exec mode** — run any arbitrary binary with `run exec`
+- **Cross-platform** — works on Windows, macOS, and Linux
+
 ## Installation
 
 ```sh
