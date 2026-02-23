@@ -1,20 +1,8 @@
 # uni-run
 
-`uni-run` is a versatile CLI tool designed to run various types of scripts, including but not limited to JavaScript, TypeScript, Python, Java, HTML, SASS, Lua, and more. It provides a unified interface to execute scripts with additional features like watching for file changes, benchmarking execution time, and more.
-
-## Features
-
-- **Watch Mode**: Automatically re-run scripts when files change.
-- **Benchmarking**: Measure and display the execution time of scripts.
-- **Environment Variables**: Set environment variables for script execution.
-- **Shell Execution**: Run scripts in a shell for more control.
-- **Console Clearing**: Clear the console before running the script.
-- **Reload Key**: Enable reloading the script with Ctrl+R or F5.
-- **Information Display**: Show detailed information about the script execution.
+A universal CLI tool to run scripts in any language — JavaScript, TypeScript, Python, Java, C, C++, Rust, Go, Ruby, PHP, Dart, Lua, and more. One command, any script, with watch mode, benchmarking, and automatic runtime detection.
 
 ## Installation
-
-To install `uni-run`, use npm:
 
 ```sh
 npm install -g uni-run
@@ -22,173 +10,125 @@ npm install -g uni-run
 
 ## CLI Usage
 
-### Basic Command
-
-To run a script, use the following command:
-
 ```sh
-run script.ext [options] -- [args for internal bin]
-uni-run script.ext [options] -- [args for internal bin]
-rux script.ext [options] -- [args for internal bin]
-uni-rux script.ext [options] -- [args for internal bin]
+run <script> [options] -- [args for script]
+uni-run <script> [options] -- [args for script]
 ```
 
-Note: `rux` and `uni-rux` run scripts once and exit (no watch mode by default).
+`rux` / `uni-rux` are aliases that run once and exit (no watch mode, keeps console output):
+
+```sh
+rux <script> [options] -- [args for script]
+uni-rux <script> [options] -- [args for script]
+```
 
 ### Examples
 
-#### Running a JavaScript File
-
 ```sh
-run ./scripts/main.js
+run ./main.ts
+run ./main.py
+run ./Main.java
+run ./hello.c
+run ./main.js -- --port 3000
 ```
 
-#### Running a TypeScript File
+### Subcommands
 
 ```sh
-run ./scripts/main.ts
+run exec <binary> [args]     # Execute an arbitrary binary
+run list                     # List all supported script types
+run clean                    # Clean the temp/cache directory
 ```
 
-#### Running a Python File
+## Options
 
-```sh
-run ./scripts/main.py
-```
+### Watch Mode
 
-#### Running a Java File
+| Flag                     | Alias | Description                                 |
+| ------------------------ | ----- | ------------------------------------------- |
+| `--do-not-watch`         | `-dw` | Disable watch mode                          |
+| `--ext <exts...>`        | `-e`  | Watch only specific extensions              |
+| `--focus <paths...>`     | `-f`  | Watch only specific paths (chokidar syntax) |
+| `--ignore <patterns...>` | `-ig` | Exclude paths (.gitignore syntax)           |
+| `--delay <ms>`           | `-d`  | Debounce delay in ms (default: 100)         |
 
-```sh
-run ./scripts/Main.java
-```
+### Reload / Console
 
-#### Running with script argv
+| Flag                   | Alias  | Description                   |
+| ---------------------- | ------ | ----------------------------- |
+| `--disable-reload-key` | `-dk`  | Disable Ctrl+R / F5 reload    |
+| `--disable-raw-stdin`  | `-drs` | Disable raw stdin mode        |
+| `--keep`               | `-k`   | Don't clear console on reload |
+| `--silent`             | `-s`   | Suppress script output        |
 
-```sh
-run ./scripts/main.js -- --some someValue
-```
+### Execution
 
-Here `--some someValue` will be passed to `node` and will be ignored by `uni-run`.
+| Flag                   | Description                           |
+| ---------------------- | ------------------------------------- |
+| `--exit`               | Run once and exit (default for `rux`) |
+| `--shell`              | Run in shell mode                     |
+| `--cwd <path>`         | Set working directory                 |
+| `--env <KEY=VALUE...>` | Set environment variables             |
+| `--node-dev`           | Set `NODE_ENV=development`            |
 
-#### Executing with a custom binary
+### Benchmarking / Info
 
-```sh
-run exec python ./scripts/custom.py
-run exec custom-binary arg1 arg2
-```
+| Flag                    | Alias | Description                        |
+| ----------------------- | ----- | ---------------------------------- |
+| `--bench`               | `-b`  | Show execution time                |
+| `--bench-prefix <text>` | `-bp` | Custom prefix for benchmark output |
+| `--info`                |       | Show execution information         |
+| `--time`                |       | Show start time                    |
 
-#### Listing supported scripts
+## Configuration
 
-```sh
-run list
-```
-
-#### Cleaning cache
-
-```sh
-run clean
-```
-
-## Define Custom Configuration
-
-Create `.uni-run.json` file in your user home directory or current working directory.
+Create `~/.uni-run.json` to override default runtimes:
 
 ```json
 {
-  "javascript-runtime": "bun",
-  "typescript-runtime": "deno"
+  "$schema": "https://github.com/NazmusSayad/uni-run/raw/refs/heads/main/public/uni-run.schema.json",
+  "runtime": {
+    "python": "uv",
+    "javascript": "bun",
+    "typescript": "deno"
+  }
 }
 ```
 
-Now you can run your script with `run script.js` or `run script.ts` with your own runtime.
+### Configurable Runtimes
 
-## Setup Custom Executors
+| Language   | Options                         | Default      |
+| ---------- | ------------------------------- | ------------ |
+| JavaScript | `node`, `deno`, `bun`           | `node`       |
+| TypeScript | `tsx`, `ts-node`, `deno`, `bun` | `tsx`        |
+| Python     | `python`, `python3`, `uv`       | `python`     |
+| Dart       | `dart`, `dartvm`                | `dart`       |
+| PowerShell | `powershell`, `pwsh`            | `powershell` |
+| Shell      | `bash`, `zsh`, `sh`             | `bash`       |
+| Lua        | `lua`, `luac`, `luajit`         | `lua`        |
 
-Create `.uni-run.cjs` file in your user home directory or current working directory.
-NOTE: Your custom executors will have more priority than the default executors.
+## Supported Languages
 
-```js
-module.exports = [
-  {
-    name: 'Name',
-    exts: ['ext'],
-    getRuntime(args, options, config) {
-      return {
-        exec: ['YOUR_BIN', ...args],
-      }
-    },
-  },
-]
-```
+| Language           | Extensions                                 |
+| ------------------ | ------------------------------------------ |
+| JavaScript         | `.js` `.jsx` `.mjs` `.cjs` `.cjsx` `.mjsx` |
+| TypeScript         | `.ts` `.tsx` `.mts` `.cts` `.mtsx` `.ctsx` |
+| Python             | `.py`                                      |
+| Java               | `.java`                                    |
+| Dart               | `.dart`                                    |
+| PowerShell         | `.ps1`                                     |
+| Command Prompt     | `.cmd` `.bat`                              |
+| Shell Script       | `.sh`                                      |
+| Fish Shell         | `.fish`                                    |
+| Lua                | `.lua`                                     |
+| Ruby               | `.rb`                                      |
+| Go                 | `.go`                                      |
+| C (GCC)            | `.c`                                       |
+| C++ (G++)          | `.cpp`                                     |
+| C# (Mono)          | `.cs`                                      |
+| Rust (rustc)       | `.rs`                                      |
+| SASS/SCSS          | `.sass` `.scss`                            |
+| PHP                | `.php`                                     |
+| HTML (live-server) | `.html` `.htm`                             |
 
-Now you can run your script with `run script.ext`.
-
-## API
-
-The `uni-run` package provides a simple API to manage and execute scripts.
-
-#### `addExecutorBefore(options: ExecutorOptions)` or `addExecutorAfter(options: ExecutorOptions)`:
-
-Both methods add an executor to the list of executors. The `addExecutorBefore` method adds the executor before the default executors, while the `addExecutorAfter` method adds the executor after the default executors. This means that the executor will be used before or after checking the default executors.
-
-```typescript
-import uniRun from 'uni-run'
-
-uniRun.addExecutorBefore({
-  name: 'Name',
-  exts: ['ext'],
-  getRuntime(args, options, config) {
-    return {
-      exec: ['YOUR_BIN', ...args],
-    }
-  },
-})
-```
-
-#### `start(args?: string[])`:
-
-Starts the application with the provided arguments. If no arguments are provided, it inherits from CLI.
-
-```typescript
-import uniRun from 'uni-run'
-
-uniRun.start(['arg1', 'arg2'])
-```
-
-### Exports
-
-The package also exports the following utilities:
-
-- `currentModule` - Get the current module information
-- `getConfig(cwd?: string)` - Get configuration from `.uni-run.json`
-- `getUserExecutors(cwd?: string)` - Get user-defined executors from `.uni-run.cjs`
-- `ScriptExecutorOptions` and other types from `./scriptExecutors/types.t`
-
-```typescript
-import { getConfig, getUserExecutors } from 'uni-run'
-
-const config = getConfig('/path/to/project')
-const executors = getUserExecutors('/path/to/project')
-```
-
-### Example Usage
-
-```typescript
-import uniRun from 'uni-run'
-
-// Add the Executor to uni-run
-uniRun.addExecutorBefore({
-  name: 'Name',
-  exts: ['ext'],
-  getRuntime(args, options, config) {
-    return {
-      exec: ['YOUR_BIN', ...args],
-    }
-  },
-})
-
-// Start the application with arguments
-uniRun.start(['arg1.some'])
-
-// Or inherit from CLI
-uniRun.start()
-```
+Compiled languages (C, C++, C#, Rust) are compiled to a temp directory and executed automatically. Use `run clean` to remove compiled artifacts.
