@@ -8,24 +8,11 @@
     "lint:fix": "eslint . --fix",
     "lint:tc": "tsc --noEmit --watch",
     "lint": "tsc --noEmit && eslint .",
-    "exports": "tsx ./write-exports.ts",
     "build": "tsdown --config ./tsdown.config.ts",
     "dev": "concurrently --names \"R,T\" --prefix-colors \"blue.dim,magenta.dim\" \"tsdown --config ./tsdown.config.ts --watch\" \"tsc --noEmit --watch\"",
-    "start": "tsx --watch ./src/index.ts",
     "bin": "tsx ./src/bin.ts",
+    "start": "tsx --watch ./src/index.ts",
     "json": "tsx ./src/json-schema.ts"
-  },
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
-  "exports": {
-    "./bin": {
-      "import": "./dist/bin.mjs",
-      "require": "./dist/bin.cjs"
-    },
-    ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
-    }
   },
   "bin": {
     "run": "./dist/run.mjs",
