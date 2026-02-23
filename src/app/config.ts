@@ -1,4 +1,5 @@
 import NoArg from 'noarg'
+import type { app } from './app'
 
 export const executionConfig = NoArg.defineConfig({
   flags: {
@@ -74,63 +75,42 @@ export const executionConfig = NoArg.defineConfig({
   },
 })
 
-export const app = NoArg.create('uni-run', {
-  ...executionConfig,
-  description: 'A universal runner for scripts',
-  system: { splitListByComma: true },
-  arguments: [
-    { name: 'script', type: NoArg.string(), description: 'Run a script' },
-  ],
-})
-
-export const exec = app.create('exec', {
-  ...executionConfig,
-  description: 'Execute a script with the given binary',
-})
-
-export const list = app.create('list', {
-  description: 'List supported scripts',
-})
-
-export const clean = app.create('clean', {
-  description: 'Clean cache directory',
-})
-
-export type ExecuteOptions = ReturnType<typeof mapFlagsToOptions>
-export function mapFlagsToOptions(flags: NoArg.InferFlags<typeof app>) {
-  if (flags.exit) {
-    flags['do-not-watch'] = true
-    flags['disable-reload-key'] = true
+export function resolveSharedConfigOptions(
+  input: NoArg.InferFlags<typeof app>
+) {
+  if (input.exit) {
+    input['do-not-watch'] = true
+    input['disable-reload-key'] = true
   }
 
   const resolvedEnv: Record<string, string> = {}
-  for (const env of flags.env ?? []) {
+  for (const env of input.env ?? []) {
     const [key, value] = env.split('=')
     resolvedEnv[key] = value
   }
 
   return {
-    cwd: flags.cwd,
-    shell: !!flags.shell,
-    silent: !!flags.silent,
-    showInfo: !!flags.info,
-    showTime: !!flags.time,
-    benchmark: !!(flags.bench ?? flags['bench-prefix']),
-    benchmarkPrefix: flags['bench-prefix'],
+    cwd: input.cwd,
+    shell: !!input.shell,
+    silent: !!input.silent,
+    showInfo: !!input.info,
+    showTime: !!input.time,
+    benchmark: !!(input.bench ?? input['bench-prefix']),
+    benchmarkPrefix: input['bench-prefix'],
 
-    clearOnReload: !flags.keep,
-    keystrokeReload: !flags['disable-reload-key'],
-    stdinSafeMode: !!flags['disable-raw-stdin'],
+    clearOnReload: !input.keep,
+    keystrokeReload: !input['disable-reload-key'],
+    stdinSafeMode: !!input['disable-raw-stdin'],
 
-    watch: !flags['do-not-watch'],
-    watchDelay: flags.delay,
-    watchFocus: flags.focus?.length ? flags.focus : [flags.cwd],
-    watchIgnore: flags.ignore ?? [],
-    watchExtensions: flags.ext ?? [],
+    watch: !input['do-not-watch'],
+    watchDelay: input.delay,
+    watchFocus: input.focus?.length ? input.focus : [input.cwd],
+    watchIgnore: input.ignore ?? [],
+    watchExtensions: input.ext ?? [],
 
     env: {
       ...resolvedEnv,
-      ...(flags['node-dev'] ? { NODE_ENV: 'development' } : {}),
+      ...(input['node-dev'] ? { NODE_ENV: 'development' } : {}),
     } as NodeJS.ProcessEnv,
   }
 }
