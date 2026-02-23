@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+npx tsc --noEmit
+npx lint-staged --verbose
