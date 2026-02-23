@@ -16,15 +16,6 @@ export default defineConfig({
 
   treeshake: false,
   external: [/node:/gim, ...getExternal((packageJSON as any).dependencies)],
-
-  outputOptions(options, format) {
-    const ext = format === 'cjs' ? 'cjs' : format === 'es' ? 'mjs' : 'js'
-
-    return {
-      ...options,
-      entryFileNames: `[name].${ext}`,
-    }
-  },
 })
 
 function getExternal(dependencies: unknown) {
