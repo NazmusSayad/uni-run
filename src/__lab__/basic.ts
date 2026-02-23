@@ -1,3 +1,3 @@
 import { app } from '@/app'
 
-app.start(['./scripts/main.ts', '--keep', '-dk'])
+app.start(['exec', 'node', '--', '--version'])

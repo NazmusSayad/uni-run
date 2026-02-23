@@ -11,7 +11,7 @@ export const defaultRuntimes: ScriptRuntime[] = [
       const userConfig = readUserConfig()
 
       return {
-        start: [userConfig.config?.jsRuntime ?? 'node', ...args],
+        start: [userConfig.runtime?.javascript ?? 'node', ...args],
       }
     },
   },
@@ -23,7 +23,7 @@ export const defaultRuntimes: ScriptRuntime[] = [
       const userConfig = readUserConfig()
 
       return {
-        start: [userConfig.config?.tsRuntime ?? 'tsx', ...args],
+        start: [userConfig.runtime?.typescript ?? 'tsx', ...args],
       }
     },
   },
@@ -32,8 +32,14 @@ export const defaultRuntimes: ScriptRuntime[] = [
     name: 'Python',
     extensions: ['py'],
     async parse(args: string[]) {
+      const userConfig = readUserConfig()
+      const runtime = userConfig.runtime?.python ?? 'python'
+
       return {
-        start: ['python', ...args],
+        start:
+          runtime === 'uv'
+            ? ['uv', 'run', 'python', ...args]
+            : [runtime, ...args],
       }
     },
   },
@@ -52,8 +58,12 @@ export const defaultRuntimes: ScriptRuntime[] = [
     name: 'Dart',
     extensions: ['dart'],
     async parse(args: string[]) {
+      const userConfig = readUserConfig()
+      const runtime = userConfig.runtime?.dart ?? 'dart'
+
       return {
-        start: ['dartvm', ...args],
+        start:
+          runtime === 'dart' ? ['dart', 'run', ...args] : [runtime, ...args],
       }
     },
   },
@@ -62,8 +72,14 @@ export const defaultRuntimes: ScriptRuntime[] = [
     name: 'Powershell',
     extensions: ['ps1'],
     async parse(args: string[]) {
+      const userConfig = readUserConfig()
+
       return {
-        start: ['powershell', '-File', ...args],
+        start: [
+          userConfig.runtime?.powershell ?? 'powershell',
+          '-File',
+          ...args,
+        ],
       }
     },
   },
@@ -82,8 +98,10 @@ export const defaultRuntimes: ScriptRuntime[] = [
     name: 'Shell Script',
     extensions: ['sh'],
     async parse(args: string[]) {
+      const userConfig = readUserConfig()
+
       return {
-        start: ['bash', ...args],
+        start: [userConfig.runtime?.shell ?? 'bash', ...args],
       }
     },
   },
@@ -102,8 +120,10 @@ export const defaultRuntimes: ScriptRuntime[] = [
     name: 'Lua',
     extensions: ['lua'],
     async parse(args: string[]) {
+      const userConfig = readUserConfig()
+
       return {
-        start: ['lua', ...args],
+        start: [userConfig.runtime?.lua ?? 'lua', ...args],
       }
     },
   },

@@ -4,7 +4,7 @@ import NoArg from 'noarg'
 import os from 'os'
 import { appExecutionConfig, resolveSharedConfigOptions } from '../config'
 import { Execution } from '../execution'
-import { getRuntimeByPath } from '../runtime'
+import { getRuntimeByScript } from '../runtime'
 
 export const app = NoArg.create('uni-run', {
   ...appExecutionConfig,
@@ -18,7 +18,7 @@ export const app = NoArg.create('uni-run', {
 app.on(async ([script, listArs, trailingArgs], flags) => {
   const options = resolveSharedConfigOptions(flags)
 
-  const scriptRunner = getRuntimeByPath(script)
+  const scriptRunner = getRuntimeByScript(script)
   if (!scriptRunner) {
     console.error(chalk.red('Unsupported script:'), chalk.yellow(script))
     return console.log(
