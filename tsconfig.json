@@ -1,13 +1,17 @@
 {
   "compilerOptions": {
-    "outDir": "./dist",
-    "module": "CommonJS",
-    "target": "ES6",
+    "target": "ES2022",
+    "module": "ESNext",
+    "declaration": true,
+    "outDir": "dist",
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+    "strict": true,
+    "noEmit": true,
+    "moduleResolution": "node",
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "declaration": true,
-    "strict": true,
-    "pretty": true
+    "paths": { "@/*": ["./src/*"] }
   },
   "include": ["src"]
 }

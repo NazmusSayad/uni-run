@@ -1,8 +1,9 @@
-# npmize
 *
-!lib/**
+
 !dist/**
 !README.md
 !package.json
 
-__lab__
+!LICENSE
+!LICENSE.md
+!LICENSE.txt
