@@ -1,10 +1,14 @@
 import chalk from 'chalk'
-import { ChildProcess } from 'child_process'
-import { spawn, sync as spawnSync } from 'cross-spawn'
+import { ChildProcess, spawn } from 'child_process'
 import * as readline from 'readline'
-import { ExecutionConfig } from './config'
+import { AppExecutionConfig } from './config'
 import { killProcess } from './kill-ps'
 import { chokidarWatcher } from './watcher'
+
+type ExecutionOptions = AppExecutionConfig & {
+  startArgs: string[]
+  preStartArgs?: string[]
+}
 
 export class Execution {
   private child: ChildProcess | null = null
@@ -12,30 +16,15 @@ export class Execution {
   private isBenchmarkRunning = false
   private isExecutionExecutedAnyTime = false
 
-  constructor(
-    private options: ExecutionConfig,
-    private startArgs: string[],
-    private preStartArgs?: string[]
-  ) {
+  constructor(private options: ExecutionOptions) {
     this.setup()
   }
 
   start() {
-    this.startProcess()
+    return this.startProcess()
   }
 
-  private spawnSync(args: string[]) {
-    const [command, ...args_] = args
-    return spawnSync(command, args_, {
-      argv0: command,
-      cwd: this.options.cwd,
-      shell: this.options.shell,
-      env: { ...process.env, ...this.options.env },
-      stdio: this.options.silent ? 'ignore' : 'inherit',
-    })
-  }
-
-  private spawnAsync(args: string[]) {
+  private spawn(args: string[]) {
     const [command, ...args_] = args
     return spawn(command, args_, {
       argv0: command,
@@ -76,8 +65,8 @@ export class Execution {
         cwd: this.options.cwd,
         callback: () => this.startProcess(),
 
-        ignore: this.options.watchIgnore,
-        targets: this.options.watchFocus,
+        ignore: this.options.watchIgnores,
+        targets: this.options.watchTargets,
         extensions: this.options.watchExtensions,
 
         debounceDelay: this.options.watchDelay,
@@ -85,18 +74,24 @@ export class Execution {
     }
   }
 
-  private startProcess() {
+  private async startProcess() {
     this.killProcess()
     this.clearBeforeStart()
     this.renderInfoLogs()
     this.isExecutionExecutedAnyTime = true
 
-    if (this.preStartArgs) {
-      this.spawnSync(this.preStartArgs)
+    if (this.options.preStartArgs) {
+      const result = this.spawn(this.options.preStartArgs)
+
+      await new Promise((resolve) => {
+        result.on('close', (code) => {
+          resolve(code === 0 ? null : code)
+        })
+      })
     }
 
     this.startBenchmark()
-    this.child = this.spawnAsync(this.startArgs)
+    this.child = this.spawn(this.options.startArgs)
     this.child.on('exit', (code) => {
       this.endBenchmark()
 
@@ -155,23 +150,24 @@ export class Execution {
         )
       }
 
-      if (this.options.watchFocus.length) {
+      if (this.options.watchTargets.length) {
         console.log(
           chalk.dim.bgGreen('INFO:'),
           chalk.green('Watching target:'),
           chalk.dim(
-            this.options.watchFocus.map((ext) => chalk.reset(ext)).join(', ') ||
-              chalk.yellow('*')
+            this.options.watchTargets
+              .map((ext) => chalk.reset(ext))
+              .join(', ') || chalk.yellow('*')
           )
         )
       }
 
-      if (this.options.watchIgnore.length) {
+      if (this.options.watchIgnores.length) {
         console.log(
           chalk.dim.bgGreen('INFO:'),
           chalk.green('Watching ignore:'),
           chalk.dim(
-            this.options.watchIgnore
+            this.options.watchIgnores
               .map((ext) => chalk.reset(ext))
               .join(', ') || chalk.yellow('*')
           )

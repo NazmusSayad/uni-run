@@ -1,7 +1,7 @@
 import NoArg from 'noarg'
 import type { app } from './handlers/app'
 
-export const executionConfig = NoArg.defineConfig({
+export const appExecutionConfig = NoArg.defineConfig({
   flags: {
     'do-not-watch': NoArg.boolean()
       .aliases('dw')
@@ -104,8 +104,9 @@ export function resolveSharedConfigOptions(
 
     watch: !input['do-not-watch'],
     watchDelay: input.delay,
-    watchFocus: input.focus?.length ? input.focus : [input.cwd],
-    watchIgnore: input.ignore ?? [],
+
+    watchIgnores: input.ignore ?? [],
+    watchTargets: input.focus?.length ? input.focus : [input.cwd],
     watchExtensions: input.ext ?? [],
 
     env: {
@@ -115,4 +116,4 @@ export function resolveSharedConfigOptions(
   }
 }
 
-export type ExecutionConfig = ReturnType<typeof resolveSharedConfigOptions>
+export type AppExecutionConfig = ReturnType<typeof resolveSharedConfigOptions>
