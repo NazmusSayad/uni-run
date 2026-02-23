@@ -14,15 +14,15 @@ export const defaultRuntimes: ScriptRuntime[] = [
     },
   },
 
-  // {
-  //   name: 'TypeScript',
-  //   extensions: ['ts', 'tsx', 'mts', 'cts', 'mtsx', 'ctsx'],
-  //   async parse(args: string[]) {
-  //     const userConfig = readUserConfig()
+  {
+    name: 'TypeScript',
+    extensions: ['ts', 'tsx', 'mts', 'cts', 'mtsx', 'ctsx'],
+    async parse(args: string[]) {
+      const userConfig = readUserConfig()
 
-  //     return {
-  //       start: [userConfig.config?.tsRuntime ?? 'tsx', ...args],
-  //     }
-  //   },
-  // },
+      return {
+        start: [userConfig.config?.tsRuntime ?? 'tsx', ...args],
+      }
+    },
+  },
 ]
