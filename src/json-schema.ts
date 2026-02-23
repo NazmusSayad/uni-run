@@ -6,5 +6,5 @@ const schema = userConfigSchema.toJSONSchema()
 
 fs.writeFileSync(
   path.resolve('./public/uni-run.schema.json'),
-  JSON.stringify(schema, null, 2)
+  JSON.stringify(schema)
 )
