@@ -7,7 +7,7 @@ export function getTempOutputFilePath(slug?: string) {
   const ext = process.platform === 'win32' ? '.exe' : ''
 
   const dirPath = [slug ?? randomUUID(), process.pid, process.ppid].join('-')
-  const tempDir = path.join(os.tmpdir(), dirPath)
+  const tempDir = path.join(os.tmpdir(), `uni-run-${dirPath}`)
 
   if (fs.existsSync(tempDir)) {
     fs.rmSync(tempDir, { recursive: true })
