@@ -9,10 +9,27 @@ export const defaultRuntimes: ScriptRuntime[] = [
     extensions: ['js', 'jsx', 'mjs', 'cjs', 'cjsx', 'mjsx'],
     async parse(args: string[]) {
       const userConfig = readUserConfig()
+      const runtime = userConfig.runtime?.javascript ?? 'node'
 
-      return {
-        start: [userConfig.runtime?.javascript ?? 'node', ...args],
+      if (runtime === 'node') {
+        return {
+          start: ['node', ...args],
+        }
       }
+
+      if (runtime === 'bun') {
+        return {
+          start: ['bun', 'run', ...args],
+        }
+      }
+
+      if (runtime === 'deno') {
+        return {
+          start: ['deno', 'run', ...args],
+        }
+      }
+
+      throw new Error(`Unsupported JavaScript runtime: ${runtime}`)
     },
   },
 
@@ -21,10 +38,33 @@ export const defaultRuntimes: ScriptRuntime[] = [
     extensions: ['ts', 'tsx', 'mts', 'cts', 'mtsx', 'ctsx'],
     async parse(args: string[]) {
       const userConfig = readUserConfig()
+      const runtime = userConfig.runtime?.typescript ?? 'tsx'
 
-      return {
-        start: [userConfig.runtime?.typescript ?? 'tsx', ...args],
+      if (runtime === 'tsx') {
+        return {
+          start: ['tsx', ...args],
+        }
       }
+
+      if (runtime === 'ts-node') {
+        return {
+          start: ['ts-node', ...args],
+        }
+      }
+
+      if (runtime === 'bun') {
+        return {
+          start: ['bun', 'run', ...args],
+        }
+      }
+
+      if (runtime === 'deno') {
+        return {
+          start: ['deno', 'run', ...args],
+        }
+      }
+
+      throw new Error(`Unsupported TypeScript runtime: ${runtime}`)
     },
   },
 
@@ -35,12 +75,19 @@ export const defaultRuntimes: ScriptRuntime[] = [
       const userConfig = readUserConfig()
       const runtime = userConfig.runtime?.python ?? 'python'
 
-      return {
-        start:
-          runtime === 'uv'
-            ? ['uv', 'run', 'python', ...args]
-            : [runtime, ...args],
+      if (runtime === 'python' || runtime === 'python3') {
+        return {
+          start: [runtime, ...args],
+        }
       }
+
+      if (runtime === 'uv') {
+        return {
+          start: ['uv', 'run', 'python', ...args],
+        }
+      }
+
+      throw new Error(`Unsupported Python runtime: ${runtime}`)
     },
   },
 
@@ -61,10 +108,25 @@ export const defaultRuntimes: ScriptRuntime[] = [
       const userConfig = readUserConfig()
       const runtime = userConfig.runtime?.dart ?? 'dart'
 
-      return {
-        start:
-          runtime === 'dart' ? ['dart', 'run', ...args] : [runtime, ...args],
+      if (runtime === 'fvm') {
+        return {
+          start: ['fvm', 'dart', 'run', ...args],
+        }
       }
+
+      if (runtime === 'dart') {
+        return {
+          start: ['dart', 'run', ...args],
+        }
+      }
+
+      if (runtime === 'dartvm') {
+        return {
+          start: ['dartvm', ...args],
+        }
+      }
+
+      throw new Error(`Unsupported Dart runtime: ${runtime}`)
     },
   },
 
@@ -73,14 +135,15 @@ export const defaultRuntimes: ScriptRuntime[] = [
     extensions: ['ps1'],
     async parse(args: string[]) {
       const userConfig = readUserConfig()
+      const runtime = userConfig.runtime?.powershell ?? 'powershell'
 
-      return {
-        start: [
-          userConfig.runtime?.powershell ?? 'powershell',
-          '-File',
-          ...args,
-        ],
+      if (runtime === 'powershell' || runtime === 'pwsh') {
+        return {
+          start: [runtime, '-File', ...args],
+        }
       }
+
+      throw new Error(`Unsupported PowerShell runtime: ${runtime}`)
     },
   },
 
@@ -99,10 +162,15 @@ export const defaultRuntimes: ScriptRuntime[] = [
     extensions: ['sh'],
     async parse(args: string[]) {
       const userConfig = readUserConfig()
+      const shell = userConfig.runtime?.shell ?? 'bash'
 
-      return {
-        start: [userConfig.runtime?.shell ?? 'bash', ...args],
+      if (shell === 'bash' || shell === 'zsh' || shell === 'sh') {
+        return {
+          start: [shell, ...args],
+        }
       }
+
+      throw new Error(`Unsupported shell: ${shell}`)
     },
   },
 
@@ -121,10 +189,27 @@ export const defaultRuntimes: ScriptRuntime[] = [
     extensions: ['lua'],
     async parse(args: string[]) {
       const userConfig = readUserConfig()
+      const runtime = userConfig.runtime?.lua ?? 'lua'
 
-      return {
-        start: [userConfig.runtime?.lua ?? 'lua', ...args],
+      if (runtime === 'lua') {
+        return {
+          start: ['lua', ...args],
+        }
       }
+
+      if (runtime === 'luajit') {
+        return {
+          start: ['luajit', ...args],
+        }
+      }
+
+      if (runtime === 'luac') {
+        return {
+          start: ['luac', ...args],
+        }
+      }
+
+      throw new Error(`Unsupported Lua runtime: ${runtime}`)
     },
   },
 
@@ -153,6 +238,7 @@ export const defaultRuntimes: ScriptRuntime[] = [
     extensions: ['c'],
     async parse([script, ...args]: string[]) {
       const output = getTempOutputFilePath('c-gcc')
+
       return {
         compile: ['gcc', script, '-o', output],
         start: [output, ...args],
@@ -165,6 +251,7 @@ export const defaultRuntimes: ScriptRuntime[] = [
     extensions: ['cpp'],
     async parse([script, ...args]: string[]) {
       const output = getTempOutputFilePath('cpp-gcc')
+
       return {
         compile: ['g++', script, '-o', output],
         start: [output, ...args],
@@ -177,6 +264,7 @@ export const defaultRuntimes: ScriptRuntime[] = [
     extensions: ['cs'],
     async parse([script, ...args]: string[]) {
       const output = getTempOutputFilePath('cs-mono')
+
       return {
         compile: ['mcs', '-out:' + output, script],
         start: [output, ...args],
@@ -189,6 +277,7 @@ export const defaultRuntimes: ScriptRuntime[] = [
     extensions: ['rs'],
     async parse([script, ...args]: string[]) {
       const output = getTempOutputFilePath('rust-rustc')
+
       return {
         compile: ['rustc', script, '-o', output],
         start: [output, ...args],

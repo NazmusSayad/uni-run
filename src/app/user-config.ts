@@ -13,7 +13,7 @@ const runtimeSchema = z.object({
 
   typescript: z.enum(['tsx', 'ts-node', 'deno', 'bun']),
 
-  dart: z.enum(['dart', 'dartvm']),
+  dart: z.enum(['fvm', 'dart', 'dartvm']),
 
   powershell: z.enum(['powershell', 'pwsh']),
 
