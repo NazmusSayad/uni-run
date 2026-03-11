@@ -7,7 +7,7 @@
     "lint:fix": "eslint . --fix",
     "lint:tc": "tsc --noEmit --watch",
     "lint": "tsc --noEmit && eslint .",
-    "build": "tsx ./src/json-schema.ts && tsdown --config ./tsdown.config.ts",
+    "build": "tsdown --config ./tsdown.config.ts",
     "dev": "concurrently --names \"R,T\" --prefix-colors \"blue.dim,magenta.dim\" \"tsdown --config ./tsdown.config.ts --watch\" \"tsc --noEmit --watch\"",
     "bin": "tsx ./src/bin.ts",
     "start": "tsx --watch ./src/index.ts",
