@@ -97,7 +97,7 @@ Create `~/.uni-run.json` to override default runtimes:
 
 ```json
 {
-  "$schema": "https://github.com/NazmusSayad/uni-run/raw/refs/heads/main/public/uni-run.schema.json",
+  "$schema": "https://github.com/NazmusSayad/uni-run/raw/refs/heads/schema/schema.json",
   "runtime": {
     "python": "uv",
     "javascript": "bun",
