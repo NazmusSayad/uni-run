@@ -1,0 +1,49 @@
+name: Build and Deploy JSON Schema
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-schema:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: latest
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build JSON schema
+        run: pnpm run json
+
+      - name: Force checkout schema branch
+        run: |
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git fetch origin
+          git checkout -B schema origin/main
+
+      - name: Commit and push schema
+        run: |
+          git add -A
+          if [ -n "$(git status --porcelain)" ]; then
+            git commit -m "chore: build JSON schema from main"
+            git push -f origin schema
+          else
+            echo "No changes to commit"
+          fi
