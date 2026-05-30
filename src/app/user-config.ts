@@ -11,7 +11,14 @@ const runtimeSchema = z.object({
 
   javascript: z.enum(['node', 'deno', 'bun']),
 
-  typescript: z.enum(['tsx', 'ts-node', 'deno', 'bun']),
+  typescript: z.enum([
+    'tsx',
+    'tsx.exe',
+    'ts-node',
+    'ts-node.exe',
+    'deno',
+    'bun',
+  ]),
 
   dart: z.enum(['fvm', 'dart', 'dartvm']),
 

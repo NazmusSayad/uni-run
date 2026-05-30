@@ -46,9 +46,21 @@ export const defaultRuntimes: ScriptRuntime[] = [
         }
       }
 
+      if (runtime === 'tsx.exe') {
+        return {
+          start: ['tsx.exe', ...args],
+        }
+      }
+
       if (runtime === 'ts-node') {
         return {
           start: ['ts-node', ...args],
+        }
+      }
+
+      if (runtime === 'ts-node.exe') {
+        return {
+          start: ['ts-node.exe', ...args],
         }
       }
 
