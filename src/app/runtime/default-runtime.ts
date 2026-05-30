@@ -46,9 +46,9 @@ export const defaultRuntimes: ScriptRuntime[] = [
         }
       }
 
-      if (runtime === 'tsx.exe') {
+      if (runtime === 'mise-tsx') {
         return {
-          start: ['tsx.exe', ...args],
+          start: ['mise', 'exec', '--', 'tsx', ...args],
         }
       }
 
@@ -58,9 +58,9 @@ export const defaultRuntimes: ScriptRuntime[] = [
         }
       }
 
-      if (runtime === 'ts-node.exe') {
+      if (runtime === 'mise-ts-node') {
         return {
-          start: ['ts-node.exe', ...args],
+          start: ['mise', 'exec', '--', 'ts-node', ...args],
         }
       }
 

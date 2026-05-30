@@ -7,15 +7,15 @@ import { z } from 'zod'
 const USER_CONFIG_PATH = path.join(os.homedir(), '.uni-run.json')
 
 const runtimeSchema = z.object({
-  python: z.enum(['python', 'python3', 'uv']),
+  python: z.enum(['python3', 'python', 'uv', 'mise-python', 'mise-uv']),
 
   javascript: z.enum(['node', 'deno', 'bun']),
 
   typescript: z.enum([
     'tsx',
-    'tsx.exe',
+    'mise-tsx',
     'ts-node',
-    'ts-node.exe',
+    'mise-ts-node',
     'node',
     'deno',
     'bun',
