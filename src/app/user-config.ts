@@ -16,6 +16,7 @@ const runtimeSchema = z.object({
     'tsx.exe',
     'ts-node',
     'ts-node.exe',
+    'node',
     'deno',
     'bun',
   ]),

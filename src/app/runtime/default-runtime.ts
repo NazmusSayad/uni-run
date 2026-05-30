@@ -64,6 +64,12 @@ export const defaultRuntimes: ScriptRuntime[] = [
         }
       }
 
+      if (runtime === 'node') {
+        return {
+          start: ['node', ...args],
+        }
+      }
+
       if (runtime === 'bun') {
         return {
           start: ['bun', 'run', ...args],
